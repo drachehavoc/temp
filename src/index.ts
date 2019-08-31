@@ -2,7 +2,7 @@ import express from 'express';
 import glob from 'glob';
 import path from 'path';
 
-const port = 3000;
+const port = 8080;
 const app = express();
 const routesFolder = path.join(__dirname, 'routes');
 
