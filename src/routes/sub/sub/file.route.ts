@@ -1,4 +1,4 @@
 import express from 'express';
 const router = express.Router()
-router.use(express.static(__dirname + '/../public'));
+router.get('/', (req, res) => res.end('EXEMPLO FILE'));
 export default router;
