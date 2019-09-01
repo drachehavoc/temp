@@ -16,7 +16,7 @@ export class User {
         password: string
     }) {
         return new Promise(async (resolve, reject) => {
-            let conn = await connection.getConnection();
+            let conn = await connection();
             try {
                 let perfil = {
                     name: data.name,
@@ -55,7 +55,7 @@ export class User {
         }
     ) {
         return new Promise(async (resolve, reject) => {
-            let conn = await connection.getConnection();
+            let conn = await connection();
             try {
                 let session = Session.find(ses);
 

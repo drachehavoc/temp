@@ -25,15 +25,14 @@ export class Login {
 
     static async register(userId: number, login: string, pass: string) {
         let secret = await Login.secret(login, pass);
-        console.log(secret);
-        let conn = await connection.getConnection();
+        let conn = await connection();
         let info = await conn.query(`INSERT INTO login(perfil_id, secret) VALUES(?, ?)`, [userId, secret]);
         return info;
     }
 
     static async alter(userId: number, login: string, pass: string) {
         let secret = await Login.secret(login, pass);
-        let conn = await connection.getConnection();
+        let conn = await connection();
         let info = await conn.query(`UPDATE login SET secret=? WHERE id=? LIMIT 1`, [secret, userId]);
         return info;
     }
@@ -41,12 +40,18 @@ export class Login {
     static async find(login: string, pass: string) {
         return new Promise(async (resolve, reject) => {
             let secret = await Login.secret(login, pass);
-            let conn = await connection.getConnection();
+            let conn = await connection();
             let stream = conn.queryStream('SELECT id, perfil_id FROM login WHERE secret = ? LIMIT 1', [secret]);
             stream.on('data', row => resolve(new Session({ perfil: row.perfil_id, login: row.id }).id));
             stream.on('error', err => reject(err));
             stream.on('end', () => reject(null));
             stream.on('close', () => reject(null));
         })
+    }
+
+    static logout(ses: string) {
+        let session = Session.find(ses);
+        if (session) session.selfDestruct();
+        return session != null;
     }
 }

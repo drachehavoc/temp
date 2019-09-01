@@ -14,12 +14,14 @@ export class Session {
         this.timer();
     }
 
-    static find(id: string) {
+    static find(id: string, throwErr: boolean = false) {
         let ses = hash.get(id);
+
         if (ses) {
             ses.timer();
             return ses;
         }
+
         return null;
     }
 
@@ -32,11 +34,14 @@ export class Session {
             clearTimeout(this.timerId);
 
         this.timerId =
-            setTimeout(() => {
-                console.log(`SESSÃO TERMINADA: ${this.uid}`)
-                hash.delete(this.uid)
-            }, 1000 * 60);
+            setTimeout(() => this.selfDestruct.bind(this), 1000 * 60);
     }
+
+    selfDestruct() {
+        console.log(`SESSÃO TERMINADA: ${this.uid}`);
+        hash.delete(this.uid);
+    }
+
 
     get id(): string {
         return this.uid;
