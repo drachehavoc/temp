@@ -1,4 +1,5 @@
 import mariadb from 'mariadb';
+const config = require('./connection.json');
 
 // DESCOBRIR COMO FAZER A POOL NÃO DAR ERRO
 // const handler = mariadb.createPool({
@@ -13,10 +14,5 @@ import mariadb from 'mariadb';
 //     return conn as mariadb.Connection;
 // }
 
-const handler = mariadb.createConnection({
-    database: 'events', 
-    host: '127.0.0.1',
-    user: 'root', 
-});
-
+const handler = mariadb.createConnection(config);
 export const connection = async () => handler;
