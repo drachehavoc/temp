@@ -62,9 +62,26 @@ CREATE TABLE `activity_type` (
   `name` varchar(255) NOT NULL,
   `points` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
 /*Data for the table `activity_type` */
+
+insert  into `activity_type`(`id`,`name`,`points`) values 
+(1,'Abertura',0),
+(2,'Congresso',0),
+(3,'Encontro',0),
+(4,'Seminário',0),
+(5,'Mesa-redonda',0),
+(6,'Painel',0),
+(7,'Simpósio',0),
+(8,'Fórum',0),
+(9,'Conferência',0),
+(10,'Jornada',0),
+(11,'Cursos',0),
+(12,'Minicurso',0),
+(13,'Colóquio',0),
+(14,'Workshop',0),
+(15,'Encerramento',0);
 
 /*Table structure for table `event` */
 
@@ -74,11 +91,14 @@ CREATE TABLE `event` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `start_at` datetime NOT NULL,
-  `duration` int(11) DEFAULT NULL,
+  `finish_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Data for the table `event` */
+
+insert  into `event`(`id`,`title`,`start_at`,`finish_at`) values 
+(1,'X Encontro de Tecnologia da Informação e Comunicação','2019-10-22 23:04:22','2019-10-25 23:05:11');
 
 /*Table structure for table `group` */
 
@@ -134,7 +154,26 @@ CREATE TABLE `login` (
 /*Data for the table `login` */
 
 insert  into `login`(`id`,`person_id`,`secret_key`,`group_id`) values 
-(1,1,'Tvq2Zbir+86m0ukcY/2cenLfoLGU9gbiTgvDuJ/2okMBZmE=',NULL);
+(1,1,'_CREATE_A_SECRE_',1);
+
+/*Table structure for table `permission` */
+
+DROP TABLE IF EXISTS `permission`;
+
+CREATE TABLE `permission` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `hash` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+/*Data for the table `permission` */
+
+insert  into `permission`(`id`,`hash`,`title`) values 
+(1,'event:register',''),
+(2,'event:alter',''),
+(3,'event:1:activity:register',''),
+(4,'event:1:activity:alter','');
 
 /*Table structure for table `permission_group` */
 
@@ -142,18 +181,18 @@ DROP TABLE IF EXISTS `permission_group`;
 
 CREATE TABLE `permission_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `grupo_id` int(11) NOT NULL,
+  `group_id` int(11) NOT NULL,
   `permission_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `grupo_id` (`grupo_id`),
+  KEY `grupo_id` (`group_id`),
   KEY `permission_id` (`permission_id`),
-  CONSTRAINT `FK_permissao_grupo_grupo_id` FOREIGN KEY (`grupo_id`) REFERENCES `group` (`id`),
-  CONSTRAINT `FK_permissao_grupo_permissao_id` FOREIGN KEY (`permission_id`) REFERENCES ` permission` (`id`)
+  CONSTRAINT `FK_permissao_grupo_grupo_id` FOREIGN KEY (`group_id`) REFERENCES `group` (`id`),
+  CONSTRAINT `FK_permissao_grupo_permissao_id` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Data for the table `permission_group` */
 
-insert  into `permission_group`(`id`,`grupo_id`,`permission_id`) values 
+insert  into `permission_group`(`id`,`group_id`,`permission_id`) values 
 (1,1,1);
 
 /*Table structure for table `permission_login` */
@@ -168,7 +207,7 @@ CREATE TABLE `permission_login` (
   PRIMARY KEY (`id`),
   KEY `permission_id` (`permission_id`),
   KEY `login_id` (`login_id`),
-  CONSTRAINT `FK_permissoes_usuario_permissao_id` FOREIGN KEY (`permission_id`) REFERENCES ` permission` (`id`),
+  CONSTRAINT `FK_permissoes_usuario_permissao_id` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`),
   CONSTRAINT `FK_permissoes_usuario_usuario_id` FOREIGN KEY (`login_id`) REFERENCES `login` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
@@ -201,7 +240,7 @@ CREATE TABLE `person` (
 /*Data for the table `person` */
 
 insert  into `person`(`id`,`name`,`lastname`,`document_id`,`email`,`birth`,`birth_city`,`current_city`,`current_school`) values 
-(1,'Daniel','de Andrade Varela ','05362170929','daniel.varela@ifc.edu.br','1986-07-07 00:00:00',3060,4462,'');
+(1,'Daniel','de Andrade Varela ','','daniel.varela@ifc.edu.br','1986-07-07 00:00:00',3060,4464,'');
 
 /*Table structure for table `place_city` */
 
