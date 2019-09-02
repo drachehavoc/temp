@@ -14,8 +14,7 @@ import mariadb from 'mariadb';
 // }
 
 const handler = mariadb.createConnection({
-    // connectionLimit: 15,
-    database: 'eventos', 
+    database: 'events', 
     host: '127.0.0.1',
     user: 'root', 
 });

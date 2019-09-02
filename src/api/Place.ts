@@ -1,5 +1,8 @@
 import { connection } from "./connection";
 import { Session } from "./Session";
+import { Login } from "./Login";
+
+const cache = new Map();
 
 export class Place {
     private static async getPlace(ses: string, column: 'birth_city' | 'current_city') {
@@ -18,27 +21,33 @@ export class Place {
 
             let stream = conn.queryStream(`
                 SELECT 
-                    c.id AS city_id,
-                    s.id AS state_id,
-                    c.name AS city,
-                    s.name AS state
+                    city.name AS city,
+                    state.name AS state
+                    
                 FROM 
-                    perfil AS p
-                    LEFT JOIN cidade AS c ON c.id = p.${column}
-                    LEFT JOIN place_state AS s ON s.id = c.state
+                    person
+
+                    LEFT JOIN place_city AS city 
+                        ON city.id = person.${column}
+
+                    LEFT JOIN place_state AS state 
+                        ON state.id = city.state_id
+
                 WHERE 
-                    p.id = ?
+                    person.id = ?
+
                 LIMIT 1        
-            `, [session.store.perfil]);
+            `, [session.store.person]);
 
             stream.on('data', row => resolve(row));
             stream.on('error', err => reject(err));
-            stream.on('end', () => reject(null));
-            stream.on('close', () => reject(null));
+            stream.on('end', () => reject(`nenhuma cidade encontrada`));
+            stream.on('close', () => reject(`nenhuma cidade encontrada`));
         });
     }
 
     static async birth(ses: string) {
+        Login.permission(ses, 'hadoken');
         return Place.getPlace(ses, 'birth_city');
     }
 
@@ -48,20 +57,28 @@ export class Place {
 
     static async getBrazil() {
         return new Promise(async (resolve, reject) => {
+            if (cache.has('cidades')) {
+                resolve(cache.get('cidades'));
+            }
             try {
                 let conn = await connection();
                 let res = await conn.query(`
                     SELECT 
-                        c.id AS city_id,
-                        s.id AS state_id,
-                        c.name AS city,
-                        s.name AS state,
-                        s.fs AS fs
+                        city.id,
+                        city.name AS city,
+                        state.name AS state,
+                        state.iso AS iso
+
                     FROM 
-                        cidade AS c 
-                        LEFT JOIN place_state AS s ON s.id = c.state
-                        LEFT JOIN place_country AS cou ON cou.id = s.country
+                        place_city AS city 
+                        
+                        LEFT JOIN place_state AS state 
+                            ON state.id = city.state_id
+                        
+                        LEFT JOIN place_country AS country 
+                            ON country.id = state.country
                 `);
+                cache.set('cidades', res);
                 resolve(res);
             } catch (e) {
                 reject(e);
