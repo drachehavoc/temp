@@ -1,0 +1,898 @@
+{
+	"info": {
+		"_postman_id": "46741c6d-62af-445a-890e-6e8588d63601",
+		"name": "etic-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "LOGIN",
+			"item": [
+				{
+					"name": "LOGAR-SE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "38e68ba4-bafb-4c1c-9104-d71b38a0fcb6",
+								"exec": [
+									"let x = pm.response.text();",
+									"pm.globals.set(\"__ses__\", x);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/login?email=daniel.varela@ifc.edu.br&pass=dünhaPr0g",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"login"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "daniel.varela@ifc.edu.br"
+								},
+								{
+									"key": "pass",
+									"value": "dünhaPr0g"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CHECAR LOGIN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "38e68ba4-bafb-4c1c-9104-d71b38a0fcb6",
+								"exec": [
+									"let x = pm.response.text();",
+									"pm.globals.set(\"__ses__\", x);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/login?ses={{__ses__}}",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"login"
+							],
+							"query": [
+								{
+									"key": "ses",
+									"value": "{{__ses__}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DESLOGAR-SE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "38e68ba4-bafb-4c1c-9104-d71b38a0fcb6",
+								"exec": [
+									"let x = pm.response.text();",
+									"pm.globals.set(\"__ses__\", x);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/login?ses={{__ses__}}",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"login"
+							],
+							"query": [
+								{
+									"key": "ses",
+									"value": "{{__ses__}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PLACE",
+			"item": [
+				{
+					"name": "BUSCAR CIDADE NASCIMENTO DO USUÁRIO LOGADO",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8080/person/city/birth?ses={{__ses__}}",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"person",
+								"city",
+								"birth"
+							],
+							"query": [
+								{
+									"key": "ses",
+									"value": "{{__ses__}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BUSCAR CIDADE MORADIA DO USUÁRIO LOGADO",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8080/person/city/current?ses={{__ses__}}",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"person",
+								"city",
+								"current"
+							],
+							"query": [
+								{
+									"key": "ses",
+									"value": "{{__ses__}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BUSCAR CIDADES DO BRASIL",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8080/city",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"city"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PERSON",
+			"item": [
+				{
+					"name": "BUSCAR",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"url": {
+							"raw": "127.0.0.1:8080/person?ses={{__ses__}}",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"person"
+							],
+							"query": [
+								{
+									"key": "ses",
+									"value": "{{__ses__}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CADASTRAR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0a8c4797-9feb-4248-a036-f05678f17d34",
+								"exec": [
+									"let x = pm.response.text();",
+									"pm.globals.set(\"__ses__\", x);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Daniel",
+									"type": "text"
+								},
+								{
+									"key": "lastname",
+									"value": "de Andrade Varela",
+									"type": "text"
+								},
+								{
+									"key": "document_id",
+									"value": "05362170929",
+									"type": "text"
+								},
+								{
+									"key": "birth",
+									"value": "1986-07-07",
+									"type": "text"
+								},
+								{
+									"key": "birth_city",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "current_city",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "current_school",
+									"value": "VIDA",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "daniel.varela@ifc.edu.br",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/person",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ALTERAR",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Daniel (alter)",
+									"type": "text"
+								},
+								{
+									"key": "lastname",
+									"value": "de Andrade Varela (alter)",
+									"type": "text"
+								},
+								{
+									"key": "document_id",
+									"value": "05362170929 (alter)",
+									"type": "text"
+								},
+								{
+									"key": "birth",
+									"value": "1999-09-09",
+									"type": "text"
+								},
+								{
+									"key": "birth_city",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "current_city",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "current_school",
+									"value": "VIDA (alter)",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "daniel.varela@ifc.edu.br(alter)",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/person?ses={{__ses__}}",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"person"
+							],
+							"query": [
+								{
+									"key": "ses",
+									"value": "{{__ses__}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "EVENT",
+			"item": [
+				{
+					"name": "BUSCAR LISTA",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Evento Cadastrado(alter)",
+									"type": "text"
+								},
+								{
+									"key": "start_at",
+									"value": "2018-09-09 12:13:14",
+									"type": "text"
+								},
+								{
+									"key": "finish_at",
+									"value": "2018-09-19 14:15:16",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/event",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"event"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CADASTRAR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35043749-e356-4feb-b157-493f39a6bdc0",
+								"exec": [
+									"let x = pm.response.text();",
+									"pm.globals.set(\"__evt__\", x);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Evento Cadastrado",
+									"type": "text"
+								},
+								{
+									"key": "start_at",
+									"value": "2019-09-09 12:13:14",
+									"type": "text"
+								},
+								{
+									"key": "finish_at",
+									"value": "2019-09-19 14:15:16",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/event?ses={{__ses__}}",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"event"
+							],
+							"query": [
+								{
+									"key": "ses",
+									"value": "{{__ses__}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ALTERAR",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Evento Cadastrado(alter)",
+									"type": "text"
+								},
+								{
+									"key": "start_at",
+									"value": "2018-09-09 12:13:14",
+									"type": "text"
+								},
+								{
+									"key": "finish_at",
+									"value": "2018-09-19 14:15:16",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/event?ses={{__ses__}}&id={{__evt__}}",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"event"
+							],
+							"query": [
+								{
+									"key": "ses",
+									"value": "{{__ses__}}"
+								},
+								{
+									"key": "id",
+									"value": "{{__evt__}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ACTIVITY",
+			"item": [
+				{
+					"name": "BUSCAR",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8080/activity?ses={{__ses__}}&event=1",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"activity"
+							],
+							"query": [
+								{
+									"key": "ses",
+									"value": "{{__ses__}}"
+								},
+								{
+									"key": "event",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BUSCAR TIPOS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8080/activity?ses={{__ses__}}&event=1",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"activity"
+							],
+							"query": [
+								{
+									"key": "ses",
+									"value": "{{__ses__}}"
+								},
+								{
+									"key": "event",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CADASTRAR",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "atividade 001",
+									"type": "text"
+								},
+								{
+									"key": "seats",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "start_at",
+									"value": "2019-10-10 10:10:10",
+									"type": "text"
+								},
+								{
+									"key": "duration",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "activity_type_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/activity?ses={{__ses__}}&id={{__evt__}}",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"activity"
+							],
+							"query": [
+								{
+									"key": "ses",
+									"value": "{{__ses__}}"
+								},
+								{
+									"key": "id",
+									"value": "{{__evt__}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ALTER",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "atividade 001",
+									"type": "text"
+								},
+								{
+									"key": "seats",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "start_at",
+									"value": "2019-10-10 10:10:10",
+									"type": "text"
+								},
+								{
+									"key": "duration",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "activity_type_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/activity?id=1&ses={{__ses__}}&event=1",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"activity"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								},
+								{
+									"key": "ses",
+									"value": "{{__ses__}}"
+								},
+								{
+									"key": "event",
+									"value": "{{__evt__}}",
+									"disabled": true
+								},
+								{
+									"key": "event",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "33289820-b003-4bb6-8092-f9f75168fa90",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "6dd26c85-7b3a-4a9e-9954-0f6a5a578a56",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "2d7f21c3-5996-40b1-b850-98faf2dd16a8",
+			"key": "ses",
+			"value": "nononononono",
+			"type": "string"
+		}
+	]
+}
