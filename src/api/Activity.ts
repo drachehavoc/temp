@@ -11,7 +11,7 @@ export class Activity {
                         id, 
                         title,
                         seats, 
-                        start_at
+                        start_at,
                         duration, 
                         activity_type_id  
                     FROM 

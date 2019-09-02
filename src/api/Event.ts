@@ -14,7 +14,6 @@ export class Event {
         });
     }
 
-
     static async register(ses: string, data: {
         title: string,
         start_at: string,
