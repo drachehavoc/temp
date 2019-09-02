@@ -10,14 +10,14 @@ router.get('/',
             let ses = Session.find(req.query.ses);
             return (ses)
                 ? res.send(ses.id)
-                : res.send(':/1');
+                : res.send(false);
         }
         Login
             .find(req.query.email, req.query.pass)
             .then(hash => res.send(hash))
             .catch(err => {
                 console.error(err);
-                res.send(':/2');
+                res.send(false);
             });
     });
 

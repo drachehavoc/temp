@@ -1,7 +1,8 @@
 import express from 'express';
-import bodyParser from 'body-parser';
+import multer = require('multer');
 import { Person } from '../../api/Person';
 
+const upload = multer();
 const router = express.Router()
 
 router.get('/',
@@ -12,11 +13,10 @@ router.get('/',
             console.error(err);
             res.send(err);
         })
-
 );
 
 router.post('/',
-    bodyParser.urlencoded({ extended: false }),
+    upload.none(),
     (req, res) => Person
         .register(req.body)
         .then(hash => res.send(hash))
@@ -27,7 +27,7 @@ router.post('/',
 );
 
 router.put('/',
-    bodyParser.urlencoded({ extended: false }),
+    upload.none(),
     (req, res) => Person
         .alter(req.query.ses, req.body)
         .then(hash => res.send(hash))

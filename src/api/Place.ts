@@ -47,7 +47,6 @@ export class Place {
     }
 
     static async birth(ses: string) {
-        Login.permission(ses, 'hadoken');
         return Place.getPlace(ses, 'birth_city');
     }
 

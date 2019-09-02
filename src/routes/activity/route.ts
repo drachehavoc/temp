@@ -1,7 +1,8 @@
 import express from 'express';
-import bodyParser from 'body-parser';
+import multer = require('multer');
 import { Activity } from '../../api/Activity';
 
+const upload = multer();
 const router = express.Router()
 
 router.get('/',
@@ -15,7 +16,7 @@ router.get('/',
 );
 
 router.post('/',
-    bodyParser.urlencoded({ extended: false }),
+    upload.none(),
     (req, res) => Activity
         .register(req.query.ses, req.query.event, req.body)
         .then(hash => res.send(hash))
@@ -27,7 +28,7 @@ router.post('/',
 );
 
 router.put('/',
-    bodyParser.urlencoded({ extended: false }),
+    upload.none(),
     (req, res) => Activity
         .alter(req.query.ses, req.query.id, req.query.event, req.body)
         .then(hash => res.send(hash))
