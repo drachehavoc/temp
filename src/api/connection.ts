@@ -1,5 +1,5 @@
 import mariadb from 'mariadb';
-const config = require('./connection.json');
+const config = require('../../connection.json');
 
 // DESCOBRIR COMO FAZER A POOL NÃO DAR ERRO
 // const handler = mariadb.createPool({
