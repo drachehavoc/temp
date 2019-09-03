@@ -10,6 +10,8 @@ export class Activity {
                     SELECT 
                         id, 
                         title,
+                        subtitle,
+                        description,
                         seats, 
                         start_at,
                         duration, 

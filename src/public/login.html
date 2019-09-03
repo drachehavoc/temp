@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/vendor/bulma-0.7.5/css/bulma.css">
+    <script src="./assets/script/login.js" defer></script>
+    <title>Login</title>
+    <style>
+        main {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* background-image: url('./assets/images/main.png');
+            background-repeat: no-repeat;
+            background-size: 100% 100% */
+        }
+
+        main img {
+            margin-bottom: 5vh
+        }
+
+        .form-section {
+            width: 65%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+
+
+        }
+
+        .form {
+            width: 50%;
+        }
+
+        .lateral-content {
+            width: 35%;
+            height: 100%;
+            background: #379846;
+            opacity: 0.7;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lateral-content img {
+            width: 100vw;
+            position: relative;
+            opacity: 0.5;
+        }
+
+        .button {
+            width: 100%;
+            background: #379846;
+            color: #fff;
+
+        }
+
+        .button:hover {
+            opacity: 0.8;
+            color: #fff
+        }
+
+        #area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start
+        }
+
+        .title {
+            color: #fff
+        }
+
+        p {
+            color: #fff;
+        }
+
+        .level-item {
+            margin-right: 2vw
+        }
+
+        a {
+            text-decoration: underline;
+            color: #8b8686;
+            margin-top: 2vh
+        }
+
+        .loader {
+            border: 5px solid #d6d5d5;
+            /* Light grey */
+            border-top: 5px solid #379846;
+            /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        .loader-area{
+            display: flex;
+            justify-content: center
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media(max-width:840px) {
+            main {
+                background-image: none
+            }
+            .lateral-content {
+                display: none;
+            }
+            .form-section {
+                width: 90%
+            }
+            .form {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+
+        <section class="form-section">
+            <img src="./assets/images/logo-etic.png" alt="" class="image is-128x128">
+            <div class="field form">
+                <div class="field">
+                    <label class="label">Login</label>
+                    <div class="control">
+                        <input class="input" type="text" id="login">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Senha</label>
+                    <div class="control">
+                        <input class="input" type="password" id="senha">
+                    </div>
+                </div>
+
+                <div class="field" id="area">
+
+                    <button class="button" id="button-logar">Entrar</button>
+                    <a href="#">Esqueci minha senha</a>
+                </div>
+                <div class="loader-area">
+                    <div class="loader"></div>
+                </div>
+                <div class="messageArea" style="text-align: center"></div>
+                
+            </div>
+        </section>
+
+
+
+    </main>
+</body>
+
+</html>

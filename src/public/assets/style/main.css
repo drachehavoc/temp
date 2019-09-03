@@ -1,0 +1,280 @@
+:root {
+    font-size: 1.5vw;
+    --color-font-b: #ffffff;
+    --color-if-1: #379846;
+    --color-if-1-light: #96c624;
+    --color-if-2: #CA2027;
+    --color-if-2t: #CA2027DD;
+    --color-dark: #2c2c2a;
+    --color-dark-trans: #2c2c2aEE;
+}
+body{
+    overflow-y: hidden
+}
+main{
+    display: flex;
+    overflow: hidden
+}
+.button{
+    background: var(--color-if-1);
+    color: #fff;
+}
+.button:hover {
+    opacity: 0.8;
+    color: #fff
+}
+
+.menu{
+    width: 20%;
+    height: 100vh;
+    border-right: 1px solid #d4d4d4;
+    position: fixed;
+    transition: 0.5s;
+    z-index: 10;
+    background: #fff;
+    /* display: flex;
+    flex-direction: column;
+    justify-content: space-evenly    */
+}
+
+#content{
+    width: 80%;
+    position: absolute;
+    right: 0;
+    padding: 16px 32px 0 32px;
+    z-index: -1;
+}
+#content > div{
+    display: flex;
+    justify-content: space-between
+}
+.logo-area{
+    display: flex;
+    justify-content: end
+}
+#etic-logo-nome{
+    width: 15vh;
+    height: 55px;
+    margin-left: 1vw
+}
+
+.menu > ul{
+    border-bottom: 1px solid #d4d4d4
+}
+
+.user-image{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 2vh 0 5vh 0
+}
+
+.menu-label{
+    margin-left: 0.5vw
+}
+
+#inscricoes{
+    background: var(--color-if-1);
+    
+}
+.inscrições-title{
+    color: #fff
+}
+
+.event-day{
+    border-bottom: 1px solid #d4d4d4;
+    margin: 5vw 0
+}
+.event-day h1{
+    display: flex;
+    align-items: center
+}
+
+.arrow-down{
+    margin-left: 2vw;
+    opacity: 0.7;
+    width: 20px
+}
+.events-list{
+    display: grid;
+    grid-template-columns: 30% 30% 30%
+}
+.events-list li{
+   display: flex;
+   align-items: center;
+   padding:  1vh 1vh 1vh 0;
+   margin: 1vh 1vh;
+   cursor: pointer;
+   font-size: 0.9rem
+   /* border-radius: 4px; */
+   /* background: #f1eeee;
+   border-bottom: 1px solid #d4d4d4; */
+}
+.events-list li:hover{
+    background: #ebeaea;
+    /* border-radius: 4px */
+}
+.cadastroEvento-form > div{
+    display: flex;
+    flex-direction: column;
+}
+.cadastroEvento-form{
+   justify-content: center;
+   border-right: 1px solid #d4d4d4;
+   padding-right: 2vw
+}
+.flex-column{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+.lista-edicao{
+    padding-left: 32px
+}
+
+.edicao-cadastro-area{
+    display: flex;
+}
+
+.forms-area{
+    margin-top: 5vh;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 5vh
+}
+
+.forms-area section{
+    width: 45%;
+    /* display: flex;
+    flex-direction: column; */
+}
+.menu-bars{
+    opacity: 0.5;
+    cursor: pointer;
+    display: none;
+}
+
+.active{
+    background: var(--color-if-1);
+    color: #fff !important;
+}
+.active:hover{
+    background: var(--color-if-1-light)!important;
+}
+
+
+
+/* MOBILE */
+@media(max-width: 925px){
+    .menu{
+        position: fixed;
+        left: -70%;
+    }
+    .menu-bars{
+        display: inline;
+    }
+    #content{
+        width: 100%
+    }
+    #titulo-area{
+        margin-left: 3vw
+        
+    }
+    .events-list li{
+        font-size: 1rem;
+    }
+    .menu{
+        width: 70%
+    }
+
+    
+}
+
+@media(max-width: 800px){
+    #content{
+        padding: 16px 16px 0 16px
+    }
+    .forms-area{
+        flex-direction: column;
+    }
+    .forms-area{
+        flex-direction: column;
+    }
+    .forms-area section{
+        width: 100%
+    }
+    .label.is-small{
+        font-size:  2.5rem
+    }
+    .input.is-small{
+        font-size:  2.5rem
+    }
+    .select.is-small{
+        font-size:  2.5rem
+    }
+    .textarea.is-small{
+        font-size:  2.5rem
+    }
+    .user-image img{
+        width: 64px;
+    }
+    .user-image figure{
+        display: flex;
+        justify-content: center;
+        align-items: center
+    }
+    #etic-logo-nome{
+        display: none;
+    }
+    .button{
+        font-size: 3rem
+    }
+    #titulo-area{
+        margin-left: 3vw
+        
+    }
+    #titulo-area h1{
+        font-size: 4rem;
+        
+    }
+    #titulo-area h2{
+        font-size: 2rem
+    }
+    #logo{
+        width: 15vw;
+        height: 15vw;
+    }
+    .event-day .title.is-5{
+        font-size: 4rem
+    }
+    .events-list li{
+        font-size: 3rem;
+        /* border-bottom: 1px solid var(--color-if-1-light) */
+        border-bottom: 1px solid #d4d4d4
+    }
+
+    .events-list{
+        grid-template-columns: 90%
+    }
+    .event-day{
+        border: none;
+    }
+
+    .menu li{
+        font-size: 3rem
+    }
+    .menu p{
+        font-size: 3rem;
+    }
+    .menu h1{
+        font-size: 4rem
+    }
+    .menu-bars{
+        width: 8vw;
+        height: 8vw;
+    }
+    
+}
+
+

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/vendor/bulma-0.7.5/css/bulma.css">
+    <link rel="stylesheet" href="./assets/style/main.css">
+    <title>Eventos</title>
+</head>
+
+<body>
+    <main>
+        <aside class="menu">
+            <div class="user-image">
+                <figure class="image is-128x128">
+                    <img class="is-rounded" src="./assets/images/user-empty.png">
+                </figure>
+                <h1 class="subtitle">Igor Benedet</h1>
+            </div>
+
+            <p class="menu-label">
+                Menu
+            </p>
+            <ul class="menu-list">
+                <li>
+                    <a>Dados pessoais</a>
+                </li>
+                <li>
+                    <a>Incrições</a>
+                </li>
+                <li>
+                    <a>Meus certificados</a>
+                </li>
+            </ul>
+            <p class="menu-label">
+                Menu administradores
+            </p>
+            <ul class="menu-list">
+                <li>
+                    <a>Editar/Cadastrar eventos</a>
+                </li>
+                <li>
+                    <a>Lista de inscritos</a>
+                </li>
+                <li>
+                    <a>Cadastrar Pessoa</a>
+                </li>
+            </ul>
+
+        </aside>
+        <div id="content">
+
+            <section class="edicao-cadastro-area">
+                <div class="cadastroEvento-form flex-column">
+                    <div>
+                        <h1 class="title is-4">Cadastro de Evento</h1>
+                        <h2 class="subtitle is-5">Lorem ipsum dolor sit amet</h2>
+                    </div>
+                    <div>
+                        <section>
+                            <div class="field">
+                                <label class="label">Nome do evento</label>
+                                <div class="control">
+                                    <input class="input" type="text" placeholder="Text input">
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Palestrante</label>
+                                <div class="control">
+                                    <div class="select">
+                                        <select>
+                                            <option>Selecione</option>
+                                            <option>With options</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <button class="button">Adicionar palestrante +</button>
+                            </div>
+                        </section>
+                        <section>
+                            <div class="field">
+                                <label class="label">Descrição do evento</label>
+                                <div class="control">
+                                    <textarea class="textarea" placeholder="Textarea"></textarea>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Data/hora</label>
+                                <div class="control">
+                                    <input class="input" type="text" placeholder="Text input">
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-link">Salvar</button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-text">Excluir evento</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="lista-edicao flex-column">
+                    <h1 class="title is-4">Editar Evento</h1>
+                    <h2 class="subtitle is-5">Lorem ipsum dolor sit amet</h2>
+                    <nav class="panel">
+                        <p class="panel-heading">
+                            Lista de eventos
+                        </p>
+                        <div class="panel-block">
+                            <p class="control has-icons-left">
+                                <input class="input is-small" type="text" placeholder="pesquisar">
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-search" aria-hidden="true"></i>
+                                </span>
+                            </p>
+                        </div>
+                       
+                        <a class="panel-block">
+                            <span class="panel-icon">
+                                <i class="fas fa-book" aria-hidden="true"></i>
+                            </span>
+                            12:20 - Arduíno na prática
+                        </a>
+                        <a class="panel-block">
+                            <span class="panel-icon">
+                                <i class="fas fa-book" aria-hidden="true"></i>
+                            </span>
+                            13:30 - Machine learning
+                        </a>
+                        <a class="panel-block">
+                            <span class="panel-icon">
+                                <i class="fas fa-book" aria-hidden="true"></i>
+                            </span>
+                            15:30 - Programação PHP
+                        </a>
+                        <a class="panel-block">
+                                <span class="panel-icon">
+                                    <i class="fas fa-book" aria-hidden="true"></i>
+                                </span>
+                                12:20 - Arduíno na prática
+                            </a>
+                            <a class="panel-block">
+                                <span class="panel-icon">
+                                    <i class="fas fa-book" aria-hidden="true"></i>
+                                </span>
+                                13:30 - Machine learning
+                            </a>
+                            <a class="panel-block">
+                                <span class="panel-icon">
+                                    <i class="fas fa-book" aria-hidden="true"></i>
+                                </span>
+                                15:30 - Programação PHP
+                            </a>
+                        
+                     
+                    </nav>
+                </div>
+
+
+            </section>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

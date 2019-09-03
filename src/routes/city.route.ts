@@ -8,6 +8,7 @@ router.get('/', (req, res) => Place
     .then(cities => res.send(cities))
     .catch((err: any) => {
         console.error(err);
+        
         res.send(err);
     })
 );

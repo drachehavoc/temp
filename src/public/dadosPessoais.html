@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/vendor/bulma-0.7.5/css/bulma.css">
+    <link rel="stylesheet" href="./assets/style/main.css">
+    <script src="./assets/script/dadosPessoais.js" defer type="module"></script>
+    <title>Dados pessoais</title>
+    <style>
+       
+     .select{
+            width: 100%;
+        }
+        select{
+            width: 100%
+        }
+        .label{
+            margin-bottom: 0 
+        }
+        .button{
+            margin-top: 2vh;
+            background: var(--color-if-1);
+            color: #fff;
+            
+        }
+        .button-area{
+            display: flex;
+            justify-content: end
+        }
+        .button:hover{
+            opacity: 0.8;
+            color: #fff
+        }
+        
+    </style>
+</head>
+
+<body>
+    <main>
+        <aside class="menu">
+            <div class="user-image">
+                <figure class="image is-128x128">
+                    <img class="is-rounded" src="./assets/images/user-empty.png">
+                </figure>
+                <h1 class="subtitle" id="username"></h1>
+            </div>
+
+            <p class="menu-label">
+                Menu
+            </p>
+            <ul class="menu-list">
+                <li>
+                    <a class="active">Dados pessoais</a>
+                </li>
+                <li>
+                    <a>Incrições</a>
+                </li>
+                <li>
+                    <a>Meus certificados</a>
+                </li>
+            </ul>
+            <p class="menu-label">
+                Menu administradores
+            </p>
+            <ul class="menu-list">
+                <li>
+                    <a>Editar/Cadastrar eventos</a>
+                </li>
+                <li>
+                    <a>Lista de inscritos</a>
+                </li>
+                <li>
+                    <a>Cadastrar Pessoa</a>
+                </li>
+            </ul>
+            <div> 
+                <button class="button sair" style="margin: 1vh 0 0 1vh">Sair</button>
+            </div>
+        </aside>
+        <div id="content">
+                <div>
+                    <div style="display: flex; align-items: center">
+                        <img src="./assets/images/menu-bars.png" alt="" class="image menu-bars">
+                        <div id="titulo-area">
+                                <h1 class="title">Dados pessoais</h1>
+                                <h2 class="subtitle is-5">Lorem ipsum la</h2>
+                        </div>
+                </div>
+                    
+                        <div class="logo-area">
+                                <img src="./assets/images/logo-etic.png" alt="" class="image is-64x64" id="logo">
+                                <img src="./assets/images/logotipo-etic.png" alt="" id="etic-logo-nome">
+                        </div>
+                        
+                    </div>
+            
+            <section class="forms-area">
+                <section>
+                        <div class="field">
+                                <label class="label is-small">Nome</label>
+                                <div class="control">
+                                  <input class="input is-small" type="text" placeholder="e.g Alex Smith" id="nome">
+                                </div>
+                              </div>
+                              
+                              <div class="field">
+                                <label class="label is-small">Sobrenome</label>
+                                <div class="control">
+                                  <input class="input is-small" type="email" placeholder="e.g. alexsmith@gmail.com" id="sobrenome">
+                                </div>
+                              </div>
+                              <div class="control">
+                                    <label class="label is-small">Cidade onde mora</label>
+                                    <div class="select is-small">
+                                      <select id="current_city">
+                                        <option>Cidade onde mora</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                            
+                                  <div class="field">
+                                        <label class="label is-small">Email</label>
+                                        <div class="control">
+                                          <input class="input is-small" type="email" placeholder="e.g. alexsmith@gmail.com" id="email">
+                                        </div>
+                                      </div>
+                                      <fieldset disabled>
+                                        <div class="field">
+                                            <label class="label is-small">CPF</label>
+                                            <div class="control">
+                                              <input class="input is-small" type="cpf" id="cpf">
+                                            </div>
+                                          </div>
+                                      </fieldset>
+                                     
+                                          <div class="field">
+                                                <label class="label is-small">Senha</label>
+                                                <div class="control">
+                                                  <input class="input is-small" type="password">
+                                                </div>
+                                              </div>
+                </section>
+                <section>
+                        <div class="field">
+                                <label class="label is-small">Link para plataforma lattes</label>
+                                <div class="control">
+                                  <input class="input is-small" type="text" placeholder="e.g Alex Smith">
+                                </div>
+                              </div>
+                              
+                              <div class="field">
+                                <label class="label is-small">Data de nascimento</label>
+                                <div class="control">
+                                  <input class="input is-small" type="date" id="birth">
+                                </div>
+                              </div>
+                              <div class="control">
+                                    <label class="label is-small">Cidade de nascimento</label>
+                                    <div class="select is-small">
+                                      <select id="birth_city">
+                                        <option>Cidade onde nasceu</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="field">
+                                        <label class="label is-small">Biografia</label>
+                                        <div class="control">
+                                          <textarea class="textarea is-small" placeholder="Textarea"></textarea>
+                                        </div>
+                                      </div>
+                                      <div class="field">
+                                            <label class="label is-small">Confirmar senha</label>
+                                            <div class="control">
+                                              <input class="input is-small" type="password">
+                                            </div>
+                                            <div class="button-area">
+                                                    <button class="button">Salvar</button>
+                                            </div>
+                                           
+                </section>
+                
+            </section>
+            
+        </div>
+        
+    </main>
+</body>
+
+</html>

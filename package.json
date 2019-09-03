@@ -25,6 +25,7 @@
     "@types/ws": "^6.0.3",
     "pm2": "^3.5.1",
     "ts-node": "^8.3.0",
-    "typescript": "^3.5.3"
+    "typescript": "^3.5.3",
+    "webpack-cli": "^3.3.7"
   }
 }
