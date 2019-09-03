@@ -20,7 +20,9 @@ export class Subscription {
                 LEFT JOIN event ON event_id=event.id
             WHERE
                 event.id=?
-                AND person_id=?`,
+                AND person_id=?
+            LIMIT
+                100`,
             [event, session.store.person]
         );
         return find;
