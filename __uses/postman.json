@@ -665,7 +665,7 @@
 							]
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/activity?ses={{__ses__}}&id={{__evt__}}",
+							"raw": "127.0.0.1:8080/activity?ses={{__ses__}}&event=1",
 							"host": [
 								"127",
 								"0",
@@ -682,8 +682,13 @@
 									"value": "{{__ses__}}"
 								},
 								{
-									"key": "id",
-									"value": "{{__evt__}}"
+									"key": "event",
+									"value": "{{__evt__}}",
+									"disabled": true
+								},
+								{
+									"key": "event",
+									"value": "1"
 								}
 							]
 						}
@@ -726,7 +731,7 @@
 							]
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/activity?id=1&ses={{__ses__}}&event=1",
+							"raw": "127.0.0.1:8080/activity?ses={{__ses__}}&event=1&id=1",
 							"host": [
 								"127",
 								"0",
@@ -739,10 +744,6 @@
 							],
 							"query": [
 								{
-									"key": "id",
-									"value": "1"
-								},
-								{
 									"key": "ses",
 									"value": "{{__ses__}}"
 								},
@@ -753,6 +754,124 @@
 								},
 								{
 									"key": "event",
+									"value": "1"
+								},
+								{
+									"key": "id",
+									"value": "1",
+									"description": "id do atividade que se deseja alterar"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SUBSCRIPTION",
+			"item": [
+				{
+					"name": "BUSCAR ATIVIDADES INSCRITAS",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/subscription?ses={{__ses__}}&event=1",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"subscription"
+							],
+							"query": [
+								{
+									"key": "ses",
+									"value": "{{__ses__}}"
+								},
+								{
+									"key": "event",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "INSCREVER-SE / DESINCREVER-SE / REINSCREVER-SE",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/subscription?ses={{__ses__}}&activity=1",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"subscription"
+							],
+							"query": [
+								{
+									"key": "ses",
+									"value": "{{__ses__}}"
+								},
+								{
+									"key": "activity",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "INSCREVER-SE / DESINCREVER-SE / REINSCREVER-SE",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/subscription?ses={{__ses__}}&id=1",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"subscription"
+							],
+							"query": [
+								{
+									"key": "ses",
+									"value": "{{__ses__}}"
+								},
+								{
+									"key": "id",
 									"value": "1"
 								}
 							]
@@ -787,7 +906,7 @@
 	],
 	"variable": [
 		{
-			"id": "17e44359-62fb-42e9-9818-040e3295d196",
+			"id": "5ed48466-5cf0-446a-b033-198029cd67b7",
 			"key": "ses",
 			"value": "nononononono",
 			"type": "string"
