@@ -7,6 +7,7 @@
     --color-if-2t: #CA2027DD;
     --color-dark: #2c2c2a;
     --color-dark-trans: #2c2c2aEE;
+   /* background: #cee697 */
 }
 body{
     overflow-y: hidden
@@ -163,6 +164,43 @@ main{
     background: var(--color-if-1-light)!important;
 }
 
+.check-icon{
+    margin-left: 2vw;
+    display: none;
+}
+
+/* .modal{
+    
+} */
+
+.active-modal{
+    display: block;
+}
+
+.modal-content{
+    margin-top: 15%;
+    background: #fff;
+    padding: 5vh;
+    border-radius: 4px
+}
+
+.modal-content:first-child{
+    margin-bottom: 5vh
+}
+
+.cancela-button{
+    background: none;
+    border:none;
+    text-decoration: underline;
+    cursor: pointer;
+    color: #797474
+}
+
+
+.buttons-area{
+    margin-top: 5vh
+}
+
 
 
 /* MOBILE */
@@ -273,6 +311,14 @@ main{
     .menu-bars{
         width: 8vw;
         height: 8vw;
+    }
+
+    .active-modal{
+        font-size: 4em;
+    }
+    .modal-content{
+        margin: 30% 0;
+        border-radius: 0
     }
     
 }

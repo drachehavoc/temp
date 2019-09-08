@@ -23,3 +23,17 @@ function menuScroll(){
     }
     
 }
+
+async function logout(){
+    let request = await fetch(`http://localhost:8080/./login?ses=${localStorage.getItem('hash')}`, {
+        method: 'DELETE'
+    });
+    let response = await request.text();
+    if(response === 'true'){
+        window.location.href = 'http://localhost:8080/static/login.html'
+    }else{
+        alert('Erro ao realizar o logout')
+    }
+}
+
+document.querySelector('.sair').addEventListener('click', logout);
