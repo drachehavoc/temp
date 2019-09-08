@@ -1,9 +1,144 @@
+import { Connection } from "mariadb";
 import { connection } from "./connection";
 import { Login } from './Login';
 import { Session } from "./Session";
+import { transporter } from "./transporter";
+
+const ShortUniqueId = require("short-unique-id");
+const uid = new ShortUniqueId();
+
+const validateEmail = (email: string) => {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+export const validatePass = (pass: string) => {
+    if (
+        !/[A-Z]/.test(pass)
+        || !/[\.$@$!%*#?&]/.test(pass)
+        || pass.length < 6
+    ) throw {
+        err: true,
+        msg: `Sua senha precisa ter mais que <strong>seis caracteres</strong>, precisa ter um caracter em <strong>maiusculo</strong> e ao menos um caracter especial <strong>$@$!%*#?&.</strong>`
+    }
+}
+
+const testCPF = (strCPF: string) => {
+    var Soma;
+    var Resto;
+    Soma = 0;
+
+    if (!strCPF)
+        return false;
+
+    if (strCPF == "00000000000")
+        return false;
+
+    for (let i = 1; i <= 9; i++)
+        Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
+
+    Resto = (Soma * 10) % 11;
+
+    if ((Resto == 10) || (Resto == 11))
+        Resto = 0;
+
+    if (Resto != parseInt(strCPF.substring(9, 10)))
+        return false;
+
+    Soma = 0;
+
+    for (let i = 1; i <= 10; i++)
+        Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
+
+    Resto = (Soma * 10) % 11;
+
+    if ((Resto == 10) || (Resto == 11))
+        Resto = 0;
+
+    if (Resto != parseInt(strCPF.substring(10, 11)))
+        return false;
+
+    return true;
+}
+
+let registerTemplate = (
+    nome: string,
+    code: string
+) => `
+    Olá ${nome},<br>
+    <a href="http://etic.ifc.edu.br:8080/cadastro?indica=${code}">http://etic.ifc.edu.br:8080/cadastro?indica=${code}</a>
+`
+
+const validateData = async (conn: Connection, data: any) => {
+    let document_id = (data.document_id || '').replace(/[\.-]/g, '')
+    if (!testCPF(document_id)) throw {
+        err: true,
+        msg: 'Número de CPF inválido.'
+    }
+
+    let email = data.email.trim();
+    if (!validateEmail(email)) throw {
+        err: true,
+        msg: 'Email inválido.'
+    }
+
+    let checkMail = await conn.query('SELECT 1 FROM person WHERE email=?', [email]);
+
+    if (checkMail.length) throw {
+        err: true,
+        msg: `O e-mail informado já existe em nossa base de dados, tente recuperar senha.`
+    }
+
+    let checkCpf = await conn.query('SELECT 1 FROM person WHERE document_id=?', [document_id]);
+
+    if (checkCpf.length) throw {
+        err: true,
+        msg: `O CPF informado já existe em nossa base de dados, tente recuperar senha.`
+    }
+
+    if (
+        !data.birth
+    ) throw {
+        err: true,
+        msg: `Idade não pode ser vazio`
+    }
+
+    let birth = new Date(data.birth);
+    let now = new Date();
+    if (now.getFullYear() - birth.getFullYear() < 13) throw {
+        err: true,
+        msg: `É preciso ser maior que 13 anos de idade para cadastrar-se`
+    }
+
+    if (
+        typeof data.name == "undefined"
+        || data.name.trim() == ""
+        || typeof data.lastname == "undefined"
+        || data.lastname.trim() == ""
+    ) throw {
+        err: true,
+        msg: `O seu nome e sobrenome não podem ser vazios.`
+    }
+
+    validatePass(data.password);
+
+    return {
+        name: data.name.toLocaleLowerCase().trim(),
+        lastname: data.lastname.toLocaleLowerCase().trim(),
+        document_id: document_id,
+        birth: data.birth,
+        birth_city: data.birth_city,
+        current_city: data.current_city,
+        current_school: data.current_school || '',
+        email,
+        special: data.special || '',
+        code: uid.randomUUID(8)
+    };
+}
 
 export class Person {
     static async register(data: {
+        // 
         name: string,
         lastname: string,
         document_id: string,
@@ -11,33 +146,37 @@ export class Person {
         birth_city: number,
         current_city: number,
         current_school: number,
+        special: string,
         // login data
         email: string,
         password: string
     }) {
-        return new Promise(async (resolve, reject) => {
-            let conn = await connection();
-            try {
-                let person = {
-                    name: data.name,
-                    lastname: data.lastname,
-                    document_id: data.document_id,
-                    birth: data.birth,
-                    birth_city: data.birth_city,
-                    current_city: data.current_city,
-                    current_school: data.current_school,
-                    email: data.email,
-                };
-                let personKeys = Object.keys(person);
-                let personVals = Object.values(person);
-                let pInfo = await conn.query(`INSERT INTO person(${personKeys.join(', ')}) VALUES(${'?, '.repeat(personVals.length - 1)} ?)`, personVals);
-                let lInfo = await Login.register(pInfo.insertId, data.email, data.password);
-                let ses = new Session().id;
-                resolve(ses);
-            } catch (err) {
-                reject(err);
+        let conn = await connection();
+        let person = await validateData(conn, data);
+        let personKeys = Object.keys(person);
+        let personVals = Object.values(person);
+        let pInfo = await conn.query(`INSERT INTO person(${personKeys.join(', ')}) VALUES(${'?, '.repeat(personVals.length - 1)} ?)`, personVals);
+        let lInfo = await Login.register(pInfo.insertId, data.email, data.password);
+        let ses = new Session().id;
+        
+        let info = await transporter.sendMail({
+            from: '"eTic" <etic@ifc.edu.br>',
+            to: person.email,
+            subject: 'Bem vindo ao eTic',
+            html: registerTemplate(person.name, person.code)
+        });
+
+        transporter.sendMail(info, (err, data) => {
+            if (err) throw {
+                err: true,
+                msg: `Erro ao enviar email para o endereço ${data.email}, caso não consiga efetuar o cadastro novamente entre em contato pelo email etic@ifc.edu.br.`
             }
         });
+
+        throw {
+            err: false,
+            msg: `Cadastro efetuado com sucesso, verifique seu email para informações de como acessar o sitemas! caso não encontre o e-mail verifique sua caixa de spam.`
+        };
     }
 
     static async alter(
@@ -54,35 +193,31 @@ export class Person {
             password: string
         }
     ) {
-        return new Promise(async (resolve, reject) => {
-            let conn = await connection();
-            try {
-                let session = Session.find(ses);
+        let conn = await connection();
+        let session = Session.find(ses);
 
-                if (!session) throw {
-                    err: true,
-                    msg: 'você precisa logar-se para alterar seus dados'
-                };
+        if (!session) throw {
+            err: true,
+            msg: 'você precisa logar-se para alterar seus dados'
+        };
+        
+        let d = await validateData(conn, data);
 
-                let person = {
-                    "name=?": data.name,
-                    "lastname=?": data.lastname,
-                    "birth=?": data.birth,
-                    "birth_city=?": data.birth_city,
-                    "current_city=?": data.current_city,
-                    "current_school=?": data.current_school,
-                    "email=?": data.email,
-                };
+        let person = {
+            "name=?": d.name,
+            "lastname=?": d.lastname,
+            "birth=?": d.birth,
+            "birth_city=?": d.birth_city,
+            "current_city=?": d.current_city,
+            "current_school=?": d.current_school,
+            "email=?": d.email,
+        };
 
-                let personKeys = Object.keys(person);
-                let personVals = Object.values(person);
-                let pInfo = await conn.query(`UPDATE person SET ${personKeys.join(', ')} WHERE id=? LIMIT 1`, [...personVals, session.store.person]);
-                let lInfo = await Login.alter(session.store.login, data.email, data.password);
-                resolve(true);
-            } catch (err) {
-                reject(err);
-            }
-        });
+        let personKeys = Object.keys(person);
+        let personVals = Object.values(person);
+        let pInfo = await conn.query(`UPDATE person SET ${personKeys.join(', ')} WHERE id=? LIMIT 1`, [...personVals, session.store.person]);
+        let lInfo = await Login.alter(session.store.login, d.email, data.password);
+        return true;
     }
 
     static async me(ses: string) {

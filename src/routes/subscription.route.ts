@@ -1,39 +1,31 @@
 import express from 'express';
 import multer = require('multer');
 import { Subscription } from '../api/Subscription';
+import { finder } from '../api/finder';
 const upload = multer();
 const router = express.Router()
 
 router.get('/',
-    (req, res) => Subscription
-        .get(req.query.ses, req.query.event)
-        .then(data => res.send(data))
-        .catch(err => {
-            console.error(err);
-            res.send(err);
-        })
-);
+    finder(
+        Subscription.get,
+        ["ses", "event"],
+        []
+    ));
 
 router.post('/',
     upload.none(),
-    (req, res) => Subscription
-        .save(req.query.ses, req.query.activity)
-        .then(hash => res.send(hash))
-        .catch(err => {
-            console.error(err);
-            res.send(err);
-        })
-);
+    finder(
+        Subscription.save,
+        ["ses", "activity"],
+        []
+    ));
 
 router.put('/',
     upload.none(),
-    (req, res) => Subscription
-        .save(req.query.ses, req.query.activity)
-        .then(hash => res.send(hash))
-        .catch(err => {
-            console.error(err);
-            res.send(err);
-        })
-);
+    finder(
+        Subscription.save,
+        ["ses", "activity"],
+        []
+    ));
 
 export default router;

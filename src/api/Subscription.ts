@@ -21,6 +21,7 @@ export class Subscription {
             WHERE
                 event.id=?
                 AND person_id=?
+                AND unsubscribed_at IS NULL
             LIMIT
                 100`,
             [event, session.store.person]
@@ -55,7 +56,6 @@ export class Subscription {
             return Subscription.alter(
                 session,
                 activity_id,
-                find[0].id,
                 new Date(find[0].subscribed_at),
                 find[0].unsubscribed_at
                     ? new Date(find[0].unsubscribed_at)
@@ -69,17 +69,20 @@ export class Subscription {
     static async register(sesion: Session, activity_id: number) {
         let conn = await connection();
         let info = await conn.query(`INSERT INTO subscription(person_id, activity_id) VALUES(?, ?)`, [sesion.store.person, activity_id]);
-        return "subscribe";
+        throw {
+            err: false,
+            msg: "subscribe"
+        };
     }
 
     static async alter(
         session: Session,
         activity_id: number,
-        id: number,
         subscribed_at: Date,
         unsubscribed_at: Date | null
     ) {
         let conn = await connection();
+
         if (!unsubscribed_at) {
             let info = await conn.query(`
                 UPDATE 
@@ -92,13 +95,16 @@ export class Subscription {
                 `,
                 [activity_id, session.store.person]
             );
-            return "unsubscribe";
+            throw {
+                err: false,
+                msg: "unsubscribe"
+            }
         }
 
         const diffInMinutes = (Date.now() - unsubscribed_at.getTime()) / (1000 * 60);
         // const diffInMinutes = (subscribed_at.getTime() - unsubscribed_at.getTime()) / (1000 * 60);
         // console.log("->", subscribed_at.toLocaleString("en-US", {timeZone: "America/New_York"}))
-        if (diffInMinutes <= 15) throw {
+        if (diffInMinutes < 14) throw {
             err: true,
             msg: `A menos de ${limiteParaReInscricao} minutos você se desinscreveu desta atividade, para se reinscrever você ainda precisa aguardar ${Math.round(limiteParaReInscricao - diffInMinutes)} minutos.`
         }
@@ -107,7 +113,8 @@ export class Subscription {
             UPDATE 
                 subscription 
             SET 
-                unsubscribed_at=null
+                subscribed_at=NOW(),
+                unsubscribed_at=NULL
             WHERE 
                 activity_id=? 
                 AND person_id=? 
@@ -115,6 +122,9 @@ export class Subscription {
             [activity_id, session.store.person]
         );
 
-        return "re-subscribe";
+        throw {
+            err: false,
+            msg: "re-subscribe"
+        }
     }
 }

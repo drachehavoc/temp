@@ -5,7 +5,7 @@
             "script": "src/index.ts",
             "watch": true,
             "ignore_watch": [ "uploads", "downloads" ],
-            "instances": "max",
+            "instances": 1,
             "exec_mode": "cluster",
             "env": {
                 "production": true

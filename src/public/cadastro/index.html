@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Cadastro</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <script defer type="module" src="main.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        :root {
+            font-size: 1em;
+            color: #FFFFFF;
+            --color-a: #f1c40f;
+            --color-b: #e67e22;
+            /* --color-c: #e74c3c; */
+            --color-c: #eb4d4b;
+            --color-d: #34495e;
+            --color-e: #6ab04c;
+        }
+
+        body {
+            padding: 5vw;
+        }
+
+        body.loading .loading {
+            opacity: 1;
+            visibility: visible
+        }
+
+        body .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: #000000EE;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999;
+            transition: .5s .5s;
+            opacity: 0;
+            visibility: hidden
+        }
+
+        header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        header .button {
+            background: var(--color-c);
+            color: #FFF;
+            text-decoration: none;
+            display: flex;
+            padding: 1em;
+            margin: 0 .5em;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+        }
+
+        header .button:last-child {
+            margin-right: 0
+        }
+
+        .date h2 {
+            background: var(--color-d);
+            padding: 1em;
+            border-radius: 5px;
+            position: sticky;
+            text-align: center;
+            top: 0;
+            z-index: 7;
+        }
+
+        .date .content {
+            display: flex;
+            flex-wrap: wrap
+        }
+
+        .date .content h3 {
+            width: 100%;
+            position: sticky;
+            top: 0;
+            padding: 1.5em 0 0 .5em;
+            flex: none;
+            z-index: 10;
+        }
+
+        .date .content .activity-type {
+            width: 50%;
+            flex: none;
+            padding: 1em
+        }
+
+        .date .content .activity-type .activity {
+            background-color: var(--color-c);
+            margin-bottom: 1em;
+            padding: 1em;
+            border-radius: 5px;
+            display: flex;
+            cursor: pointer;
+            position: relative;
+            transition: .3s;
+            z-index: 5;
+        }
+
+        .date .content .activity-type .activity.registered:before {
+            content: "INSCRITO"
+        }
+
+        .date .content .activity-type .activity.registered {
+            background: var(--color-e)
+        }
+
+        .date .content .activity-type .activity .title {
+            font-size: 120%;
+            flex: none;
+            padding-bottom: 1em;
+        }
+
+        .date .content .activity-type .activity .info {
+            border-right: 1px solid #FFFFFF;
+            padding-right: 1em;
+            margin-right: 1em;
+            width: 30%;
+            text-align: right;
+            font-style: italic;
+            line-height: 140%;
+            color: #000000;
+        }
+
+        .date .content .activity-type .activity .show {
+            width: 70%;
+        }
+
+        footer {
+            height: 50vh;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            background: #000000EE;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: .5s
+        }
+
+        .modal .content {
+            display: flex;
+            flex-direction: column;
+            width: 500px;
+            background: #FFFFFF;
+            color: #34495e;
+            transform: translateY(-50px);
+            opacity: 0;
+            transition: .2s .3s
+        }
+
+        .modal.open {
+            opacity: 1;
+            visibility: visible
+        }
+
+        .modal.open .content {
+            transform: translateY(0px);
+            opacity: 1;
+        }
+
+        .modal .content h2 {
+            background: var(--color-d);
+            padding: 1em;
+            color: #FFF;
+            margin: 0;
+        }
+
+        .modal .content form {
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            padding: 1.5em 1em;
+            overflow: auto;
+        }
+
+        /* .modal .content form label {} */
+
+        .modal .content form label span {
+            display: inline-block;
+            text-align: right;
+            width: 30%;
+        }
+
+        .modal .content form select,
+        .modal .content form input {
+            width: 60%;
+            font-size: 120%;
+            padding: .5em;
+            margin: .5em;
+        }
+
+        .modal .content .buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: .5em .5em .5em 1em;
+        }
+
+        .modal .content .buttons> :last-child {
+            display: flex
+        }
+
+        .modal .content .buttons> :last-child>* {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: .5em;
+            cursor: pointer;
+        }
+
+        .modal .content span {
+            padding: 0 1em
+        }
+
+        .modal .content .buttons a {
+            text-decoration: none;
+            font-size: 80%;
+            color: var(--color-d);
+        }
+
+        .modal.cadastro .content {
+            width: 90%;
+            height: 90%;
+        }
+
+        .modal.ok h2 {
+            background: green
+        }
+
+        .modal.error h2 {
+            background: red
+        }
+
+        .modal.msglike span.msg,
+        .modal.msg span.msg {
+            padding: 1.5em;
+            font-size: 150%
+        }
+
+        @media screen and (max-width: 920px) {
+            .date .content .activity-type {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading">
+        X
+    </div>
+    <header>
+        <a data-modal="request-recovery-password" href="#">esqueci a minha senha</a>
+        <a data-modal="login" class="button login" href="#">
+            <i class="material-icons">account_circle</i> Já sou inscrito
+        </a>
+        <a data-modal="cadastro" class="button login" href="#">
+            <i class="material-icons">post_add</i> Inscrever-me
+        </a>
+    </header>
+    <main></main>
+    <footer></footer>
+
+    <div class="modal login">
+        <div class="content">
+            <h2>Login</h2>
+            <form>
+                <label>
+                    <span>e-mail:</span>
+                    <input name="email" placeholder="seu@email.com">
+                </label>
+                <label>
+                    <span>senha:</span>
+                    <input type="password" name="pass">
+                </label>
+            </form>
+            <div class="buttons">
+                <a data-modal="request-recovery-password" class="close" href="#">esqueci a minha senha</a>
+                <div class="action">
+                    <button class="close"><i class="material-icons">cancel</i>cancelar</button>
+                    <button class="entry"><i class="material-icons">verified_user</i>entrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal cadastro">
+        <div class="content">
+            <h2>Inscrição</h2>
+            <form>
+                <label>
+                    <span>CPF:</span>
+                    <input name="document_id">
+                </label>
+                <label>
+                    <span>nome:</span>
+                    <input name="name">
+                </label>
+                <label>
+                    <span>sobrenome:</span>
+                    <input name="lastname">
+                </label>
+                <label>
+                    <span>senha:</span>
+                    <input name="password" type="password">
+                </label>
+                <label>
+                    <span>e-mail:</span>
+                    <input name="email" type="email">
+                </label>
+                <label>
+                    <span>data de nascimento:</span>
+                    <input name="birth" type="date">
+                </label>
+                <label>
+                    <span>cidade onde mora:</span>
+                    <select class="cities" name="current_city"></select>
+                </label>
+                <label>
+                    <span>cidade de nascimento:</span>
+                    <select class="cities" name="birth_city"></select>
+                </label>
+                <label>
+                    <span>instituição de refêrencia:</span>
+                    <input name="current_school" placeholder="escola XPTO tuma Y, empresa XUZ fullstack dev">
+                </label>
+                <label>
+                    <span>apresenta necessidade especial?</span>
+                    <input name="special" placeholder="descreva a necessidade ou deixe em branco">
+                </label>
+                <label>
+                    <span>codigo de Indicação</span>
+                    <input name="indicacao">
+                </label>
+            </form>
+            <div class="buttons">
+                <span></span>
+                <div class="action">
+                    <button class="close"><i class="material-icons">cancel</i>cancelar</button>
+                    <button class="register-person"><i class="material-icons">verified_user</i>Cadastrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal msg">
+        <div class="content">
+            <h2>Erro</h2>
+            <span class="msg">
+                ...
+            </span>
+            <div class="buttons">
+                <span></span>
+                <div class="action">
+                    <button class="close"><i class="material-icons">cancel</i>entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal msglike error unregister">
+        <div class="content">
+            <h2>Descadastro</h2>
+            <span class="msg">
+                <p>
+                    Deseja realmente se desinscrever desta atividade?
+                </p>
+                <p>
+                    Caso essa ação seja concluida, você terá que esperar 15mins para que possa cadastrar-se novamente,
+                    fazendo com que você perca a prioridade na lista de presença.
+                </p>
+            </span>
+            <div class="buttons">
+                <span></span>
+                <div class="action">
+                    <button class="close"><i class="material-icons">cancel</i>cancelar</button>
+                    <button class="unregister"><i class="material-icons">check_circle</i>descadastrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal recovery-password">
+        <div class="content">
+            <h2>Recuperar senha</h2>
+            <form>
+                <label>
+                    <span>Nova senha:</span>
+                    <input name="pass" type="password">
+                </label>
+            </form>
+            <div class="buttons">
+                <span></span>
+                <div class="action">
+                    <button class="close"><i class="material-icons">cancel</i>cancelar</button>
+                    <button class="bt-recovery-password"><i class="material-icons">security</i>alterar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal request-recovery-password">
+        <div class="content">
+            <h2>Recuperar Senha</h2>
+            <form>
+                <label>
+                    <span>CPF:</span>
+                    <input name="document_id">
+                </label>
+                <span>
+                    caso não consiga recuperar sua senha, envie um email para
+                    <a href="mailto://etic@ifc.edu.br">etic@ifc.edu.br</a> explicando sua situação.
+                </span>
+            </form>
+            <div class="buttons">
+                <span></span>
+                <div class="action">
+                    <button class="close"><i class="material-icons">cancel</i>cancelar</button>
+                    <button class="bt-request-recovery-password"><i class="material-icons">verified_user</i>recuperar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://cdn.jsdelivr.net/npm/vanilla-masker@1.1.1/build/vanilla-masker.min.js"></script>
+    <script>
+        VMasker(document.querySelectorAll("[name=document_id]")).maskPattern("999.999.999-99")
+    </script>
+</body>
+
+</html>

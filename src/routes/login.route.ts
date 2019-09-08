@@ -1,28 +1,45 @@
 import express from 'express';
 import { Login } from '../api/Login';
-import { Session } from '../api/Session';
+import { finder } from '../api/finder';
+import multer = require('multer');
 
+const upload = multer();
 const router = express.Router()
 
+router.post('/recovery',
+    upload.none(),
+    finder(
+        Login.recovery,
+        ["hash"],
+        ["pass"]
+    ));
+
+router.get('/request-recovery',
+    finder(
+        Login.requestRecovery,
+        ["document_id"],
+        []
+    ));
+
+router.get('/check',
+    finder(
+        Login.check,
+        ["ses"],
+        []
+    ));
+
 router.get('/',
-    (req, res) => {
-        if (req.query.ses) {
-            let ses = Session.find(req.query.ses);
-            return (ses)
-                ? res.send(ses.id)
-                : res.send(false);
-        }
-        Login
-            .find(req.query.email, req.query.pass)
-            .then(hash => res.send(hash))
-            .catch(err => {
-                console.error(err);
-                res.send(false);
-            });
-    });
+    finder(
+        Login.find,
+        ["email", "pass"],
+        []
+    ));
 
 router.delete('/',
-    (req, res) => res.send(Login.logout(req.query.ses))
-);
+    finder(
+        Login.logout,
+        ["ses"],
+        []
+    ));
 
 export default router;
