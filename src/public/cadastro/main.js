@@ -102,12 +102,12 @@ document
             endLoading();
             return modalError('Erro ao Cadastrar', response.msg, false);
         }
-        
+
         if (response.err == false) {
             endLoading();
             return modalOk('Cadastrado', response.msg);
         }
-        
+
         endLoading();
         modalError('Erro de Sistema', 'Ocorreu um erro interno ao cadastrar, tente novamente caso o erro persita, por favor entrar em contato pelo email: etic@ifc.edu.br.')
     });
@@ -126,12 +126,12 @@ document
             endLoading();
             return modalError('Erro ao solicitar recuperação de senha', response.msg);
         }
-        
+
         if (response.err == false) {
             endLoading();
             return modalOk('Pedido enviado', response.msg);
         }
-        
+
         endLoading();
         modalError('Erro de Sistema', 'Ocorreu um erro interno ao cadastrar, tente novamente caso o erro persita, por favor entrar em contato pelo email: etic@ifc.edu.br.')
     });
@@ -153,12 +153,12 @@ document
             endLoading();
             return modalError('Erro ao recuperar senha', response.msg);
         }
-        
+
         if (response.err == false) {
             endLoading();
             return modalOk('Sucesso', response.msg);
         }
-        
+
         endLoading();
         modalError('Erro de Sistema', 'Ocorreu um erro interno ao cadastrar, tente novamente caso o erro persita, por favor entrar em contato pelo email: etic@ifc.edu.br.')
     });
@@ -176,7 +176,7 @@ document
             endLoading();
             return modalError('Acesso negado', response.msg, false);
         }
-        
+
         if (response.err == false) {
             endLoading();
             document.querySelector('.modal.open').classList.remove('open');
@@ -185,7 +185,7 @@ document
             loadSubscription();
             return;
         }
-        
+
         endLoading();
         modalError('Erro de Sistema', 'Ocorreu um erro interno ao cadastrar, tente novamente caso o erro persita, por favor entrar em contato pelo email: etic@ifc.edu.br.')
     });
@@ -201,8 +201,15 @@ document
         let request = await fetch(`../../subscription?ses=${localStorage.getItem('ses') || ''}&activity=${id}`, {
             method: "POST"
         });
+        let response = await request.json();
         endLoading();
-        document.querySelector(`.activity[data-id="${id}"]`).classList.remove('registered');
+
+        if (response.err == false) {
+            document.querySelector(`.activity[data-id="${id}"]`).classList.remove('registered');
+            return;
+        }
+
+        modalError('Erro de Sistema', 'Ocorreu um erro interno ao cadastrar, tente novamente caso o erro persita, por favor entrar em contato pelo email: etic@ifc.edu.br.')
     });
 
 (async () => {
@@ -309,20 +316,25 @@ document
                 }
 
                 startLoading();
-                
+
                 let request = await fetch(`../../subscription?ses=${localStorage.getItem('ses') || ''}&activity=${el.dataset.id}`, {
                     method: "POST"
                 });
 
                 let response = await request.json();
+                endLoading();
 
                 if (response.err == true) {
                     endLoading();
                     return modalError('Você precisa esperar', response.msg, false);
                 }
-                
-                endLoading();
-                el.classList.add('registered');
+
+                if (response.err == false) {
+                    el.classList.add('registered');
+                    return;
+                }
+
+                modalError('Erro de Sistema', 'Ocorreu um erro interno ao cadastrar, tente novamente caso o erro persita, por favor entrar em contato pelo email: etic@ifc.edu.br.', false)
             });
         });
 
