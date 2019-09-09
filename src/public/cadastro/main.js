@@ -164,7 +164,6 @@ document
 
         if (response.err == false) {
             endLoading();
-            window.history.pushState(null, null, '/');
             return modalOk('Sucesso', response.msg);
         }
 
