@@ -14,12 +14,12 @@ const validateEmail = (email: string) => {
 
 export const validatePass = (pass: string) => {
     if (
-        !/[A-Z]/.test(pass)
-        || !/[\.$@$!%*#?&]/.test(pass)
-        || pass.length < 6
+        // !/[A-Z]/.test(pass) ||
+        !/[\.$@$!%*#?&]/.test(pass) || 
+        pass.length < 6
     ) throw {
         err: true,
-        msg: `Sua senha precisa ter mais que <strong>seis caracteres</strong>, precisa ter um caracter em <strong>maiusculo</strong> e ao menos um caracter especial <strong>$@$!%*#?&.</strong>`
+        msg: `Sua senha precisa ter mais que <strong>seis caracteres</strong> e ao menos um caracter especial <strong>$@$!%*#?&.</strong>`
     }
 }
 
