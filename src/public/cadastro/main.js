@@ -7,6 +7,14 @@ if (src.get('recovery')) {
     modal.classList.add('open')
 }
 
+if (src.get('indication')) {
+    let modal = document.querySelector('.modal.cadastro');
+    let indication = modal.querySelector('form [name=indication]')
+    indication.value = src.get('indication');
+    indication.readOnly = true;
+    modal.classList.add('open')
+}
+
 const startLoading = () => document.body.classList.add('loading');
 
 const endLoading = () => document.body.classList.remove('loading');
@@ -258,7 +266,7 @@ document
             currentActivity = null;
             template.innerHTML += `
                 <div class="date">
-                    <h2>dia ${currentDay}</h2>
+                    <h2>dia ${start_at.getDate()}</h2>
                 </div>
             `;
             divDate = template.content.querySelector('div.date:last-child');

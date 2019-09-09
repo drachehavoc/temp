@@ -29,7 +29,7 @@ export class Subscription {
         return find;
     }
 
-    static async timeCollision(activity_id: number) {
+    static async timeCollision(activity_id: number, person_id: number) {
         let conn = await connection();
         let find = await conn.query(`
             SELECT
@@ -41,11 +41,12 @@ export class Subscription {
                     ON t.id=?
                     AND a.event_id = t.event_id
                     AND a.start_at >= t.start_at 
-                    AND a.start_at <= DATE_ADD(t.start_at, INTERVAL t.duration HOUR)
+                    AND a.start_at <= DATE_ADD(t.start_at, INTERVAL t.duration * 60 MINUTE)
                 JOIN subscription AS s
                     ON s.activity_id = a.id
                     AND unsubscribed_at IS NULL
-        `, [activity_id]);
+                    AND person_id=?
+        `, [activity_id, person_id]);
 
         if (find.length) throw {
             err: true,
@@ -87,11 +88,11 @@ export class Subscription {
         return Subscription.resubscribe(session, activity_id, find[0].unsubscribed_at)
     }
 
-    static async subscribe(sesion: Session, activity_id: number) {
-        await Subscription.timeCollision(activity_id);
+    static async subscribe(session: Session, activity_id: number) {
+        await Subscription.timeCollision(activity_id, session.store.person);
 
         let conn = await connection();
-        let info = await conn.query(`INSERT INTO subscription(person_id, activity_id) VALUES(?, ?)`, [sesion.store.person, activity_id]);
+        let info = await conn.query(`INSERT INTO subscription(person_id, activity_id) VALUES(?, ?)`, [session.store.person, activity_id]);
         throw {
             err: false,
             msg: "subscribe"
@@ -120,7 +121,6 @@ export class Subscription {
         }
     }
 
-
     static async resubscribe(
         session: Session,
         activity_id: number,
@@ -134,7 +134,7 @@ export class Subscription {
             msg: `A menos de ${limiteParaReInscricao} minutos você se desinscreveu desta atividade, para se reinscrever você ainda precisa aguardar ${Math.round(limiteParaReInscricao - diffInMinutes)} minutos.`
         }
 
-        await Subscription.timeCollision(activity_id);
+        await Subscription.timeCollision(activity_id, session.store.person);
 
         let info = await conn.query(`
             UPDATE 

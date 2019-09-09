@@ -65,8 +65,38 @@ let registerTemplate = (
     nome: string,
     code: string
 ) => `
-    Olá ${nome},<br>
-    <a href="http://etic.ifc.edu.br:8080/cadastro?indica=${code}">http://etic.ifc.edu.br:8080/cadastro?indica=${code}</a>
+    Prezado ${nome},<br>
+    <br>
+    <br>Seu cadastro foi efetuado com sucesso!
+    <br>Agora você pode gerenciar sua participação em todos os eventos do <b>X e-TIC</b> (Encontro de Tecnologia da Informação e Comunicação) que ocorrerá de 22 a 25 de outubro.
+    <br>
+    <br>Seu Número Inscrição e Código de Indicação é <b>${code}</b>
+    <br>
+    <br>Este número pode ser fornecido a um amigo e ser utilizado no cadastro dele como um Código de Indicação
+    <br>
+    <br>Convide e traga mais gente com você! Aqueles que tiverem mais indicações e estiverem presentes na cerimônia de encerramento (25/10 a partir das 19h) concorrerão a prêmios.
+    <br>
+    <br>Você pode convidar e compartilhar seu Código de Indicação para seus amigos através do link <a href="http://etic.ifc.edu.br/?indication=${code}">http://etic.ifc.edu.br/?indication=${code}</a>.
+    <br>
+    <br>Você tem inúmeras razões para participar e trazer muita gente contigo para o X e-TIC.
+    <br>
+    <br>Em caso de dúvidas não deixe de nos comunicar:
+    <br>
+    <br><b>Redes sociais</b>
+    <ul>
+        <li>Instagram: <a href="http://www.instagram.com/etic.ifc">www.instagram.com/etic.ifc</a></li>
+        <li>Facebook: <a href="http://www.facebook.com/eticIFC">www.facebook.com/eticIFC</a></li>
+    </ul>
+    <br>
+    <br><b>E-mail</b>
+    <ul>
+        <li>etic@ifc.edu.br</li>
+    </ul>
+    <br>
+    <br> Respeitosamente,
+    <br>Comissão Organizadora  do X e-TIC - 2019
+    <br>
+    <br><a href="http://www.etic.ifc.edu.br">www.etic.ifc.edu.br</a>
 `
 
 const validateData = async (conn: Connection, data: any) => {
@@ -132,6 +162,7 @@ const validateData = async (conn: Connection, data: any) => {
         current_school: data.current_school || '',
         email,
         special: data.special || '',
+        indication: data.indication,
         code: uid.randomUUID(8)
     };
 }

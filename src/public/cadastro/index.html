@@ -38,7 +38,11 @@
 
         body.loading .loading {
             opacity: 1;
-            visibility: visible
+            visibility: visible;
+            background-image: url(./loader.gif);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 8vw;
         }
 
         body .loading {
@@ -279,9 +283,7 @@
 </head>
 
 <body>
-    <div class="loading">
-        X
-    </div>
+    <div class="loading"></div>
     <header>
         <a data-modal="request-recovery-password" href="#">esqueci a minha senha</a>
         <a data-modal="login" class="button login" href="#">
@@ -363,7 +365,7 @@
                 </label>
                 <label>
                     <span>codigo de Indicação</span>
-                    <input name="indicacao">
+                    <input name="indication">
                 </label>
             </form>
             <div class="buttons">
@@ -449,7 +451,8 @@
                 <span></span>
                 <div class="action">
                     <button class="close"><i class="material-icons">cancel</i>cancelar</button>
-                    <button class="bt-request-recovery-password"><i class="material-icons">verified_user</i>recuperar</button>
+                    <button class="bt-request-recovery-password"><i
+                            class="material-icons">verified_user</i>recuperar</button>
                 </div>
             </div>
         </div>

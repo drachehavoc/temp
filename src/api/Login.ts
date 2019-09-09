@@ -12,7 +12,7 @@ let registerTemplate = (
     Olá ${nome},<br>
     você solicitou recuperação de senha, para alterar<br>
     sua senha acesse o link:<br>
-    <a href="http://etic.ifc.edu.br/?pass-recovery=${code}">http://etic.ifc.edu.br/?pass-recovery=${code}</a><br>
+    <a href="http://etic.ifc.edu.br/?recovery=${code}">http://etic.ifc.edu.br/?pass-recovery=${code}</a><br>
     <br>
     <i>caso não tenha sido você quem solicitou esta recuperação,<br>
     apenas ignore este email, dentro de 24h este link sera desativado.</i>
