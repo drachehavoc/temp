@@ -159,11 +159,12 @@ document
 
         if (response.err == true) {
             endLoading();
-            return modalError('Erro ao recuperar senha', response.msg);
+            return modalError('Erro ao recuperar senha', response.msg, false);
         }
 
         if (response.err == false) {
             endLoading();
+            window.history.pushState(null, null, '/');
             return modalOk('Sucesso', response.msg);
         }
 
