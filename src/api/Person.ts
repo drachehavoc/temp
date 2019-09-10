@@ -206,7 +206,7 @@ export class Person {
 
         throw {
             err: false,
-            msg: `Cadastro efetuado com sucesso, verifique seu email para informações de como acessar o sitemas! caso não encontre o e-mail verifique sua caixa de spam.`
+            msg: `Cadastro efetuado com sucesso. Verifique seu e-mail para informações de como acessar o sistema. Caso não encontre o e-mail verifique a sua caixa de spam.`
         };
     }
 

@@ -83,7 +83,7 @@ export class Login {
 
         return {
             err: false,
-            msg: `Verifique seu email, não se esqueça de checar sua caixa de spam.`
+            msg: `Verifique seu e-mail. Não se esqueça de verificar na sua caixa de spam.`
         }
     }
 
@@ -198,7 +198,7 @@ export class Login {
 
             let err = {
                 err: true,
-                msg: `usário e/ou senha não encontrado(s)`
+                msg: `Usuário e/ou senha não encontrado(s).`
             }
 
             stream.on('error', err => reject(err));

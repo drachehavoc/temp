@@ -44,7 +44,9 @@ export class Activity {
         seats: number,
         start_at: string,
         duration: number,
-        activity_type_id: number
+        activity_type_id: number,
+        location: string,
+        description: string
     }) {
         data.event_id = event_id;
         Login.permission(ses, `event:${event_id}:activity:register`);
@@ -61,7 +63,9 @@ export class Activity {
         seats: number,
         start_at: string,
         duration: number,
-        activity_type_id: number
+        activity_type_id: number,
+        location: string,
+        description: string
     }) {
         data.event_id = event_id;
         Login.permission(ses, `event:${event_id}:activity:alter`);
