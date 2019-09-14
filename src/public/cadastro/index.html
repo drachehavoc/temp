@@ -115,8 +115,8 @@
 
         .date .content .activity-type .activity {
             background-color: #333333;
-            margin-bottom: 1em;
-            padding: 1em;
+            margin-bottom: 2.5em;
+            padding: 1.5em 1em;
             border-radius: 5px;
             display: flex;
             cursor: pointer;
@@ -148,7 +148,7 @@
         .date .content .activity-type .activity:after {
             content: "INSCREVA-SE";
             position: absolute;
-            bottom: 0;
+            top: 0;
             right: 0;
             padding: .5em;
             background: var(--color-e);
@@ -159,7 +159,7 @@
             background-size: 16%;
             background-repeat: no-repeat;
             background-position: .25em center;
-            transform: translateY(10%) translateX(0%);
+            transform: translateY(0%) translateX(0%);
             opacity: 0;
             visibility: hidden;
             transition: .3s;
@@ -174,12 +174,8 @@
         .date .content .activity-type .activity:not(.registered):after {
             opacity: 1;
             visibility: visible;
-            transform: translateY(10%) translateX(0%);
+            transform: translateY(-50%) translateX(-5%);
             transition: .3s;
-        }
-
-        .date .content .activity-type .activity:not(.registered) {
-            padding-bottom: 2.5em
         }
 
         .date .content .activity-type .activity.registered {
