@@ -16,8 +16,8 @@
 							"script": {
 								"id": "38e68ba4-bafb-4c1c-9104-d71b38a0fcb6",
 								"exec": [
-									"let x = pm.response.text();",
-									"pm.globals.set(\"__ses__\", x);"
+									"let x = pm.response.json();",
+									"pm.globals.set(\"__ses__\", x.id);"
 								],
 								"type": "text/javascript"
 							}
@@ -34,14 +34,10 @@
 							"urlencoded": []
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/login?email=daniel.varela@ifc.edu.br&pass=dünhaPr0g",
+							"raw": "{{host}}/login?email=daniel.varela@ifc.edu.br&pass=A!1234",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"login"
 							],
@@ -52,7 +48,7 @@
 								},
 								{
 									"key": "pass",
-									"value": "dünhaPr0g"
+									"value": "A!1234"
 								}
 							]
 						}
@@ -67,8 +63,7 @@
 							"script": {
 								"id": "38e68ba4-bafb-4c1c-9104-d71b38a0fcb6",
 								"exec": [
-									"let x = pm.response.text();",
-									"pm.globals.set(\"__ses__\", x);"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -85,16 +80,13 @@
 							"urlencoded": []
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/login?ses={{__ses__}}",
+							"raw": "{{host}}/login/check?ses={{__ses__}}",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
-								"login"
+								"login",
+								"check"
 							],
 							"query": [
 								{
@@ -129,14 +121,10 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/login?ses={{__ses__}}",
+							"raw": "{{host}}/login?ses={{__ses__}}",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"login"
 							],
@@ -144,6 +132,49 @@
 								{
 									"key": "ses",
 									"value": "{{__ses__}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SOLICITAR RECUPERAÇÂO DE SENHA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "38e68ba4-bafb-4c1c-9104-d71b38a0fcb6",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{host}}/login/request-recovery?document_id=05362170929",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"login",
+								"request-recovery"
+							],
+							"query": [
+								{
+									"key": "document_id",
+									"value": "05362170929"
 								}
 							]
 						}
@@ -161,14 +192,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8080/person/city/birth?ses={{__ses__}}",
+							"raw": "{{host}}/person/city/birth?ses={{__ses__}}",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"person",
 								"city",
@@ -190,14 +217,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8080/person/city/current?ses={{__ses__}}",
+							"raw": "{{host}}/person/city/current?ses={{__ses__}}",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"person",
 								"city",
@@ -219,14 +242,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8080/city",
+							"raw": "{{host}}/city",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"city"
 							]
@@ -245,14 +264,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8080/person?ses={{__ses__}}",
+							"raw": "{{host}}/person?ses={{__ses__}}",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"person"
 							],
@@ -335,14 +350,10 @@
 							]
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/person",
+							"raw": "{{host}}/person",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"person"
 							]
@@ -406,14 +417,10 @@
 							]
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/person?ses={{__ses__}}",
+							"raw": "{{host}}/person?ses={{__ses__}}",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"person"
 							],
@@ -445,14 +452,10 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/event",
+							"raw": "{{host}}/event",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"event"
 							]
@@ -499,14 +502,10 @@
 							]
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/event?ses={{__ses__}}",
+							"raw": "{{host}}/event?ses={{__ses__}}",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"event"
 							],
@@ -546,14 +545,10 @@
 							]
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/event?ses={{__ses__}}&id={{__evt__}}",
+							"raw": "{{host}}/event?ses={{__ses__}}",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"event"
 							],
@@ -564,7 +559,8 @@
 								},
 								{
 									"key": "id",
-									"value": "{{__evt__}}"
+									"value": "{{__evt__}}",
+									"disabled": true
 								}
 							]
 						}
@@ -582,21 +578,18 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8080/activity?ses={{__ses__}}&event=1",
+							"raw": "{{host}}/activity?event=1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"activity"
 							],
 							"query": [
 								{
 									"key": "ses",
-									"value": "{{__ses__}}"
+									"value": "{{__ses__}}",
+									"disabled": true
 								},
 								{
 									"key": "event",
@@ -613,14 +606,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8080/activity/types",
+							"raw": "{{host}}/activity/types",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"activity",
 								"types"
@@ -639,17 +628,17 @@
 							"formdata": [
 								{
 									"key": "title",
-									"value": "atividade 001",
+									"value": "Blockchain - Um Panorama Geral",
 									"type": "text"
 								},
 								{
 									"key": "seats",
-									"value": "10",
+									"value": "-1",
 									"type": "text"
 								},
 								{
 									"key": "start_at",
-									"value": "2019-10-10 10:10:10",
+									"value": "2019-10-23 08:00:00",
 									"type": "text"
 								},
 								{
@@ -659,20 +648,26 @@
 								},
 								{
 									"key": "activity_type_id",
-									"value": "1",
+									"value": "15",
+									"type": "text"
+								},
+								{
+									"key": "location",
+									"value": "Auditório Nobre",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Jeancarlo Minuzzi Vicenti e Felipe de Bairros Salazar",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/activity?ses={{__ses__}}&event=1",
+							"raw": "{{host}}/activity?ses={{__ses__}}&event=1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"activity"
 							],
@@ -731,14 +726,10 @@
 							]
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/activity?ses={{__ses__}}&event=1&id=1",
+							"raw": "{{host}}/activity?ses={{__ses__}}&event=1&id=1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"activity"
 							],
@@ -784,14 +775,10 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/subscription?ses={{__ses__}}&event=1",
+							"raw": "{{host}}/subscription?ses={{__ses__}}&event=1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"subscription"
 							],
@@ -819,14 +806,10 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/subscription?ses={{__ses__}}&activity=1",
+							"raw": "{{host}}/subscription?ses={{__ses__}}&activity=1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"subscription"
 							],
@@ -854,14 +837,10 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "127.0.0.1:8080/subscription?ses={{__ses__}}&id=1",
+							"raw": "{{host}}/subscription?ses={{__ses__}}&activity=1",
 							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
+								"{{host}}"
 							],
-							"port": "8080",
 							"path": [
 								"subscription"
 							],
@@ -871,7 +850,7 @@
 									"value": "{{__ses__}}"
 								},
 								{
-									"key": "id",
+									"key": "activity",
 									"value": "1"
 								}
 							]
@@ -902,14 +881,6 @@
 					""
 				]
 			}
-		}
-	],
-	"variable": [
-		{
-			"id": "5ed48466-5cf0-446a-b033-198029cd67b7",
-			"key": "ses",
-			"value": "nononononono",
-			"type": "string"
 		}
 	]
 }
