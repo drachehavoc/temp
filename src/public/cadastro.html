@@ -29,8 +29,6 @@
             align-items: center;
             justify-content: center;
             background: #fff;
-
-
         }
 
         .form {
@@ -58,7 +56,6 @@
             width: 100%;
             background: #379846;
             color: #fff;
-
         }
 
         .button:hover {
@@ -103,14 +100,17 @@
             animation: spin 1s linear infinite;
             display: none;
         }
-        .loader-area{
+
+        .loader-area {
             display: flex;
             justify-content: center
         }
-        .select{
+
+        .select {
             width: 100%;
         }
-        .select select{
+
+        .select select {
             width: 100%
         }
 
@@ -118,6 +118,7 @@
             0% {
                 transform: rotate(0deg);
             }
+
             100% {
                 transform: rotate(360deg);
             }
@@ -127,16 +128,20 @@
             main {
                 background-image: none
             }
+
             .lateral-content {
                 display: none;
             }
+
             .form-section {
                 width: 90%
             }
+
             .form {
                 width: 100%;
             }
-            #area{
+
+            #area {
                 width: 100%
             }
         }
@@ -145,7 +150,6 @@
 
 <body>
     <main>
-
         <section class="form-section">
             <img src="./assets/images/logo-etic.png" alt="" class="image is-128x128">
             <form class="field form">
@@ -162,6 +166,7 @@
                         <input class="input" type="text" name="lastname" required>
                     </div>
                 </div>
+
                 <div class="field">
                     <label class="label">CPF</label>
                     <div class="control">
@@ -175,28 +180,31 @@
                         <input class="input" type="date" name="birth" required>
                     </div>
                 </div>
+
                 <div class="field">
                     <label class="label">Cidade de nascimento</label>
                     <div class="control">
                         <div class="select">
                             <select class="cities-list" name="birth_city">
-                              <option>Camboriú</option>
-                              <option>With options</option>
+                                <option>Camboriú</option>
+                                <option>With options</option>
                             </select>
-                          </div>
+                        </div>
                     </div>
                 </div>
+
                 <div class="field">
                     <label class="label">Cidade atual</label>
                     <div class="control">
                         <div class="select">
                             <select class="cities-list" name="current_city">
-                              <option>Camboriú</option>
-                              <option>With options</option>
+                                <option>Camboriú</option>
+                                <option>With options</option>
                             </select>
-                          </div>
+                        </div>
                     </div>
                 </div>
+                
                 <div class="field">
                     <label class="label">Escola</label>
                     <div class="control">
@@ -218,22 +226,16 @@
                     </div>
                 </div>
 
-                
                 <div class="loader-area">
                     <div class="loader"></div>
                 </div>
                 <div class="messageArea" style="text-align: center"></div>
-                
             </form>
             <div class="field" id="area">
-
                 <button class="button" id="button-cadastrar">Cadastrar</button>
                 <a href="#">Já tenho uma conta</a>
             </div>
         </section>
-
-
-
     </main>
 </body>
 

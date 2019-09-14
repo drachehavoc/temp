@@ -108,13 +108,13 @@
         }
 
         .date .content .activity-type {
-            width: 50%;
-            flex: none;
+            /* width: 50%;
+            flex: none; */
             padding: 1em
         }
 
         .date .content .activity-type .activity {
-            background-color: var(--color-c);
+            background-color: #333333;
             margin-bottom: 1em;
             padding: 1em;
             border-radius: 5px;
@@ -135,7 +135,7 @@
             right: 0;
             transform: translateY(-90%) translateX(-9%);
             font-size: 90%;
-            color: #000;
+            /* color: #000; */
             background-image: url(check.svg);
             background-size: 16%;
             background-repeat: no-repeat;
@@ -145,10 +145,41 @@
             transition: .3s .3s
         }
 
+        .date .content .activity-type .activity:after {
+            content: "INSCREVA-SE";
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            padding: .5em;
+            background: var(--color-e);
+            border-radius: 4px 0;
+            font-size: 80%;
+            padding-left: 2em;
+            background-image: url(check.svg);
+            background-size: 16%;
+            background-repeat: no-repeat;
+            background-position: .25em center;
+            transform: translateY(10%) translateX(0%);
+            opacity: 0;
+            visibility: hidden;
+            transition: .3s;
+        }
+
         .date .content .activity-type .activity.registered:before {
             transform: translateY(-30%) translateX(-9%);
             opacity: 1;
             visibility: visible;
+        }
+
+        .date .content .activity-type .activity:not(.registered):after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(10%) translateX(0%);
+            transition: .3s;
+        }
+
+        .date .content .activity-type .activity:not(.registered) {
+            padding-bottom: 2.5em
         }
 
         .date .content .activity-type .activity.registered {
@@ -169,7 +200,7 @@
             text-align: right;
             font-style: italic;
             line-height: 140%;
-            color: #000000;
+            /* color: #000000; */
         }
 
         .date .content .activity-type .activity .show {
