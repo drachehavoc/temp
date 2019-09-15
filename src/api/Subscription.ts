@@ -42,14 +42,15 @@ export class Subscription {
                 activity 
                 ON activity_id=activity.id 
             WHERE 
-                activity_id=?
+                activity_id=? AND
+                unsubscribed_at IS NULL
             GROUP BY 
                 activity_id
             LIMIT 
                 1
         `, [activity_id]);
 
-        if (find[0] && find[0].remain > 0) throw {
+        if (find[0] && find[0].seats >= 0 && find[0].remain <= 0) throw {
             err: true,
             msg: `Este evento não possui mais vagas, me desculpe :/`
         };
@@ -92,6 +93,12 @@ export class Subscription {
             err: true,
             msg: `É preciso logar-se antes de inscrever-se em um atividade do evento.`
         };
+        
+        try {
+            await Subscription.checkSeats(activity_id);
+        } catch (e) {
+            throw (e);
+        }
 
         let find = await conn.query(`
             SELECT 
