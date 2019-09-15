@@ -6,19 +6,23 @@ export class Activity {
         let conn = await connection();
         let res = await conn.query(`
             SELECT 
-                id, 
+                activity.id, 
                 title,
                 subtitle,
                 description,
-                seats, 
+                seats,
+                COUNT(subscription.id) AS occupied,
                 start_at,
                 duration, 
                 activity_type_id,
                 location
             FROM 
                 activity 
+                LEFT JOIN subscription ON activity_id=activity.id AND unsubscribed_at IS NULL
             WHERE 
-                event_id=? 
+                event_id=?
+            GROUP BY
+                activity.id
             ORDER BY 
                 start_at ASC,
                 activity_type_id ASC
