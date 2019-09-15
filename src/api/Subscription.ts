@@ -9,7 +9,7 @@ export class Subscription {
         let session = Session.find(ses);
         if (!session) throw {
             err: true,
-            msg: `é preciso logar-se para buscar os eventos cadastrados.`
+            msg: `é preciso logar-se para buscar os atividades em que está inscrito.`
         }
         let find = await conn.query(`
             SELECT 
@@ -27,6 +27,34 @@ export class Subscription {
             [event, session.store.person]
         );
         return find;
+    }
+
+    static async checkSeats(activity_id: number) {
+        let conn = await connection();
+        let find = await conn.query(`
+            SELECT 
+                (seats - count(1)) as remain, 
+                seats, 
+                title 
+            FROM 
+                subscription 
+            JOIN 
+                activity 
+                ON activity_id=activity.id 
+            WHERE 
+                activity_id=?
+            GROUP BY 
+                activity_id
+            LIMIT 
+                1
+        `, [activity_id]);
+
+        if (find[0] && find[0].remain > 0) throw {
+            err: true,
+            msg: `Este evento não possui mais vagas, me desculpe :/`
+        };
+
+        return true;
     }
 
     static async timeCollision(activity_id: number, person_id: number) {
