@@ -130,6 +130,7 @@
         .date .content .activity-type .activity:before {
             content: "INSCRITO";
             position: absolute;
+            z-index: 5;
             top: 0;
             background: var(--color-a);
             padding: .25em .25em .25em 1.5em;
@@ -150,6 +151,7 @@
         .date .content .activity-type .activity:after {
             content: "INSCREVA-SE";
             position: absolute;
+            z-index: 1;
             top: 0;
             right: 0;
             padding: .5em;
@@ -164,7 +166,7 @@
             transform: translateY(0%) translateX(0%);
             opacity: 0;
             visibility: hidden;
-            transition: .3s;
+            transition: 1s;
         }
 
         .date .content .activity-type .activity.registered:before {
