@@ -28,11 +28,12 @@ router.get('/check',
         []
     ));
 
-router.get('/',
+router.post('/',
+    upload.none(),
     finder(
         Login.find,
-        ["email", "pass"],
-        []
+        [],
+        ["email", "pass"]
     ));
 
 router.delete('/',

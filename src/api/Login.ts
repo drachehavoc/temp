@@ -31,6 +31,7 @@ const salt = `
 export class Login {
     static async secret(user: string, pass: string) {
         return new Promise((resolve, reject) => {
+            console.log(`${user}${pass}`);
             crypto.pbkdf2(`${user}${pass}`, salt, keyLength, iterations, digest,
                 (err, derivedKeyBuffer) => err
                     ? reject(err)
@@ -181,6 +182,7 @@ export class Login {
     }
 
     static async find(login: string, pass: string) {
+        
         let secret = await Login.secret(login, pass);
         let conn = await connection();
         let stream = conn.queryStream('SELECT id, person_id, group_id FROM login WHERE secret_key=? LIMIT 1', [secret]);

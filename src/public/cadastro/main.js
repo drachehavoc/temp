@@ -176,8 +176,14 @@ document
     .addEventListener('click', async evt => {
         startLoading();
         evt.preventDefault();
+        let fm = new FormData();
         let form = evt.target.closest('.content').querySelector('form');
-        let request = await fetch(`../../login?email=${form.email.value}&pass=${form.pass.value}`);
+        fm.append("email", form.email.value);
+        fm.append("pass", form.pass.value);
+        let request = await fetch(`../../login`, {
+            method: "POST",
+            body: fm
+        });
         let response = await request.json();
 
         if (response.err == true) {
