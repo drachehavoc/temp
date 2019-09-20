@@ -39,6 +39,27 @@ const getPeriodo = date => {
     return 'Madrugada';
 }
 
+const domLogin = async () => {
+    if (localStorage.getItem('ses')) {
+        let request = await fetch(`../../person?ses=${localStorage.getItem('ses')}`)
+        let data = await request.json();
+        if (data.err) return;
+        console.log(data.name)
+        document.querySelector('header.cad').style.display = "none";
+        document.querySelector('header.log').style.display = "block";
+        document.querySelector('header.log span.username').innerHTML = data.name;
+    }
+}
+
+const domLogout = async () => {
+    await fetch(`../../login?ses=${localStorage.getItem('ses')}`, {
+        method: 'DELETE'
+    });
+    localStorage.removeItem('ses');
+    document.querySelector('header.cad').style.display = "block";
+    document.querySelector('header.log').style.display = "none";
+}
+
 const modalMsgEl = document.querySelector('.modal.msg');
 const modalMsgElTitle = modalMsgEl.querySelector('h2');
 const modalMsgElMsg = modalMsgEl.querySelector('span.msg');
@@ -172,6 +193,14 @@ document
     });
 
 document
+    .querySelector('.button.logout')
+    .addEventListener('click', async evt => {
+        startLoading();
+        await domLogout();
+        endLoading();
+    })
+
+document
     .querySelector('button.entry')
     .addEventListener('click', async evt => {
         startLoading();
@@ -196,6 +225,7 @@ document
             document.querySelector('.modal.open').classList.remove('open');
             form.pass.value = '';
             localStorage.setItem('ses', response.id);
+            await domLogin();
             loadSubscription();
             return;
         }
@@ -228,6 +258,8 @@ document
 
 (async () => {
     startLoading();
+    domLogin();
+
     let container = document.querySelector('main');
     let [activities, types, cities] = await Promise.all([
         (async () => {

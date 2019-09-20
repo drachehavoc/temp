@@ -61,6 +61,11 @@
             visibility: hidden
         }
 
+        a {
+            color: #555555;
+            text-decoration: none
+        }
+
         header {
             display: flex;
             justify-content: flex-end;
@@ -79,7 +84,11 @@
             border-radius: 5px;
         }
 
-        header .button:last-child {
+        header.log {
+            display: none;
+        }
+
+        header.cad .button:last-child {
             margin-right: 0
         }
 
@@ -337,7 +346,15 @@
 
 <body>
     <div class="loading"></div>
-    <header>
+    <header class="log">
+        <a data-modal="login" class="username" href="#">
+            <i class="material-icons">account_circle</i> Olá, <span class="username"></span>
+        </a>
+        <a class="button logout" href="#">
+            <i class="material-icons">exit_to_app</i> Sair
+        </a>
+    </header>
+    <header class="cad">
         <a data-modal="request-recovery-password" href="#">esqueci a minha senha</a>
         <a data-modal="login" class="button login" href="#">
             <i class="material-icons">account_circle</i> Já sou inscrito
@@ -418,7 +435,7 @@
                 </label>
                 <label>
                     <span>codigo de Indicação</span>
-                    <input name="indication">
+                    <input name="indication" placeholder="insira aqui o seu código de indicação ou deixe em branco">
                 </label>
             </form>
             <div class="buttons">
