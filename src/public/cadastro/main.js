@@ -44,7 +44,6 @@ const domLogin = async () => {
         let request = await fetch(`../../person?ses=${localStorage.getItem('ses')}`)
         let data = await request.json();
         if (data.err) return;
-        console.log(data.name)
         document.querySelector('header.cad').style.display = "none";
         document.querySelector('header.log').style.display = "flex";
         document.querySelector('header.log span.username').innerHTML = data.name;
