@@ -46,7 +46,7 @@ const domLogin = async () => {
         if (data.err) return;
         console.log(data.name)
         document.querySelector('header.cad').style.display = "none";
-        document.querySelector('header.log').style.display = "block";
+        document.querySelector('header.log').style.display = "flex";
         document.querySelector('header.log span.username').innerHTML = data.name;
     }
 }
@@ -56,7 +56,7 @@ const domLogout = async () => {
         method: 'DELETE'
     });
     localStorage.removeItem('ses');
-    document.querySelector('header.cad').style.display = "block";
+    document.querySelector('header.cad').style.display = "flex";
     document.querySelector('header.log').style.display = "none";
 }
 
