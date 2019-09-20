@@ -55,6 +55,7 @@ const domLogout = async () => {
         method: 'DELETE'
     });
     localStorage.removeItem('ses');
+    document.querySelectorAll(`.activity.registered`).forEach(el => el.classList.remove('registered'));
     document.querySelector('header.cad').style.display = "flex";
     document.querySelector('header.log').style.display = "none";
 }
