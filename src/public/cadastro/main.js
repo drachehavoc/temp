@@ -149,7 +149,7 @@ document
         let form = evt.target.closest('.content').querySelector('form');
         let request = await fetch(`../../login/request-recovery?document_id=${form.document_id.value}`);
 
-        let response = await request.json()
+        let response = await request.json();
 
         if (response.err == true) {
             endLoading();
@@ -351,6 +351,9 @@ document
         .querySelectorAll('.activity')
         .forEach(el => {
             el.addEventListener('click', async evt => {
+                if (evt.target.nodeName == "A")
+                    return;
+                    
                 evt.preventDefault();
                 evt.stopPropagation();
 
