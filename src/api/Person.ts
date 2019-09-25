@@ -135,9 +135,9 @@ const validateData = async (conn: Connection, data: any) => {
 
     let birth = new Date(data.birth);
     let now = new Date();
-    if (now.getFullYear() - birth.getFullYear() < 13) throw {
+    if (now.getFullYear() - birth.getFullYear() < 1) throw {
         err: true,
-        msg: `É preciso ser maior que 13 anos de idade para cadastrar-se`
+        msg: `Data de nascimento precisa ser superior a um ano.`
     }
 
     if (
