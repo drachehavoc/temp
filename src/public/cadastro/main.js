@@ -343,7 +343,7 @@ document
             <div class="activity" data-id="${acitivity.id}">
                 <div class="info">
                     Inicio às ${pad(start_at.getHours(), 2)}h${pad(start_at.getMinutes(), 2)}
-                    no ${acitivity.location}, com ${hrs}h${min > 0 ? `${min}` : `00`} de duração.
+                    no ${acitivity.location}<br>com ${hrs}h${min > 0 ? `${min}` : `00`} de duração.
                 </div>
                 <div class="show">
                     <div class="title">${acitivity.title}</div>
