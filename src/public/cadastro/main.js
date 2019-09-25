@@ -334,8 +334,8 @@ document
         divDateActivitiesType.innerHTML += `
             <div class="activity" data-id="${acitivity.id}">
                 <div class="info">
-                    Inicio às ${pad(start_at.getHours(), 2)}:${pad(start_at.getMinutes(), 2)}
-                    no ${acitivity.location}, com ${acitivity.duration}hrs de duração.
+                    Inicio às ${pad(start_at.getHours(), 2)}h${pad(start_at.getMinutes(), 2)}
+                    no ${acitivity.location}, com ${acitivity.duration >= 1 ? `${acitivity.duration}h` : `${acitivity.duration * 60}m`} de duração.
                 </div>
                 <div class="show">
                     <div class="title">${acitivity.title}</div>
@@ -353,7 +353,7 @@ document
             el.addEventListener('click', async evt => {
                 if (evt.target.nodeName == "A")
                     return;
-                    
+
                 evt.preventDefault();
                 evt.stopPropagation();
 
