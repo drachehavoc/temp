@@ -331,11 +331,14 @@ document
             divDateActivitiesType = divDateActivities.querySelector('div.activity-type:last-child')
         }
 
+        let min = (acitivity.duration - Math.floor(acitivity.duration)) * 60;
+        let hrs = acitivity.duration;
+
         divDateActivitiesType.innerHTML += `
             <div class="activity" data-id="${acitivity.id}">
                 <div class="info">
                     Inicio às ${pad(start_at.getHours(), 2)}h${pad(start_at.getMinutes(), 2)}
-                    no ${acitivity.location}, com ${acitivity.duration >= 1 ? `${acitivity.duration}h` : `${acitivity.duration * 60}m`} de duração.
+                    no ${acitivity.location}, com ${hrs}h${min > 0 ? `${min}` : ``} de duração.
                 </div>
                 <div class="show">
                     <div class="title">${acitivity.title}</div>
