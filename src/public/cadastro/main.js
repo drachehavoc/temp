@@ -298,16 +298,17 @@ document
         let nextDay = `${start_at.getFullYear()}/${pad(start_at.getMonth(), 2)}/${pad(start_at.getDate(), 2)}`
         let nextPeriod = getPeriodo(start_at);
 
+        console.log('====')
         if (currentDay !== nextDay) {
             currentDay = nextDay;
             currentPeriod = null;
             currentActivity = null;
             template.innerHTML += `
-                <div class="date">
+                <div class="date" data-date='${currentDay}'>
                     <h2>dia ${start_at.getDate()}</h2>
                 </div>
             `;
-            divDate = template.content.querySelector('div.date:last-child');
+            divDate = template.content.querySelector(`div.date[data-date="${currentDay}"]`);
         }
 
         if (currentPeriod !== nextPeriod) {
