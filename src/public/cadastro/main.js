@@ -298,7 +298,6 @@ document
         let nextDay = `${start_at.getFullYear()}/${pad(start_at.getMonth(), 2)}/${pad(start_at.getDate(), 2)}`
         let nextPeriod = getPeriodo(start_at);
 
-        console.log('====')
         if (currentDay !== nextDay) {
             currentDay = nextDay;
             currentPeriod = null;
