@@ -93,12 +93,6 @@ export class Subscription {
             err: true,
             msg: `É preciso logar-se antes de inscrever-se em um atividade do evento.`
         };
-        
-        try {
-            await Subscription.checkSeats(activity_id);
-        } catch (e) {
-            throw (e);
-        }
 
         let find = await conn.query(`
             SELECT 
@@ -124,6 +118,12 @@ export class Subscription {
     }
 
     static async subscribe(session: Session, activity_id: number) {
+        try {
+            await Subscription.checkSeats(activity_id);
+        } catch (e) {
+            throw (e);
+        }
+        
         await Subscription.timeCollision(activity_id, session.store.person);
 
         let conn = await connection();
