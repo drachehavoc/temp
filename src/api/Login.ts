@@ -30,6 +30,7 @@ const salt = `
 
 export class Login {
     static async secret(user: string, pass: string) {
+        user = user.trim();
         return new Promise((resolve, reject) => {
             crypto.pbkdf2(`${user}${pass}`, salt, keyLength, iterations, digest,
                 (err, derivedKeyBuffer) => err

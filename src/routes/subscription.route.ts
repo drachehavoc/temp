@@ -20,6 +20,22 @@ router.post('/',
         []
     ));
 
+router.post('/checkin',
+    upload.none(),
+    finder(
+        Subscription.checkin,
+        [],
+        ["subs", "slug"]
+    ));
+
+router.post('/checkin/cancel',
+    upload.none(),
+    finder(
+        Subscription.checkinCancel,
+        [],
+        ["subs", "slug"]
+    ));
+
 router.put('/',
     upload.none(),
     finder(

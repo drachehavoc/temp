@@ -15,6 +15,17 @@ router.get('/',
         })
 );
 
+router.get('/slug/:slug',
+    (req, res) => Activity
+        .getBySlug(req.params.slug)
+        .then(data => res.send(data))
+        .catch(err => {
+            res.send(err);
+            console.error(err);
+        })
+
+);
+
 router.post('/',
     upload.none(),
     (req, res) => Activity

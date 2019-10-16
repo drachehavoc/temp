@@ -4,6 +4,27 @@ import { Session } from "./Session";
 const limiteParaReInscricao = 15; // minutos
 
 export class Subscription {
+    static async checkin(subs: number, slug: string) {
+        let conn = await connection();
+        let find = await conn.query(`SELECT id FROM activity WHERE slug=? LIMIT 1`, [slug]);
+        if (!find[0]) throw {
+            err: true,
+            msg: `Slug desconhecido.`
+        };
+        await conn.query(`UPDATE subscription SET check_in=NOW() WHERE id=? LIMIT 1`, [subs]);
+        return true;
+    }
+    static async checkinCancel(subs: number, slug: string) {
+        let conn = await connection();
+        let find = await conn.query(`SELECT id FROM activity WHERE slug=? LIMIT 1`, [slug]);
+        if (!find[0]) throw {
+            err: true,
+            msg: `Slug desconhecido.`
+        };
+        await conn.query(`UPDATE subscription SET check_in=NULL WHERE id=? LIMIT 1`, [subs]);
+        return true;
+    }
+
     static async get(ses: string, event: Number) {
         let conn = await connection();
         let session = Session.find(ses);
@@ -123,7 +144,7 @@ export class Subscription {
         } catch (e) {
             throw (e);
         }
-        
+
         await Subscription.timeCollision(activity_id, session.store.person);
 
         let conn = await connection();

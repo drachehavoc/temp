@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Check-in</title>
+    <style>
+        * {
+            font-family: sans-serif;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            background: #000000;
+            flex-direction: column;
+        }
+
+        body.loading .loading {
+            opacity: 1;
+            visibility: visible;
+            background-image: url(./loader.gif);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 8vw;
+        }
+
+        body .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: #000000EE;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999;
+            transition: .5s .5s;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .form-slug,
+        .form-doc {
+            display: flex;
+            flex: none;
+        }
+
+        .form-slug input,
+        .form-doc input {
+            padding: 1vw;
+            font-size: 2vw;
+            width: 100vw;
+            text-align: center
+        }
+
+        .activity {
+            font-size: 3vw;
+            padding: .5em;
+            text-align: center;
+            background: #000000;
+            color: #FFFFFF;
+            box-shadow: 0px 0px 25px -5px #000000;
+            z-index: 9;
+        }
+
+        .participants {
+            height: 100%;
+            overflow: auto;
+        }
+
+        .participants>div {
+            text-transform: capitalize;
+            font-size: 2.5vw;
+            padding: 1vw;
+            color: #FFFFFF;
+            cursor: pointer;
+        }
+
+        .participants>div:nth-child(2n+1) {
+            background: #FFFFFF33;
+        }
+
+        .participants>div:hover {
+            background-color: #FFFFFF66
+        }
+
+        .participants>div.selected {
+            background: #FFFFFF;
+            color: #000000;
+        }
+
+        .participants>div:before {
+            content: ' ';
+            width: .5em;
+            height: .5em;
+            background-color: #cccccc;
+            display: inline-block;
+            border-radius: 50%;
+            margin-right: .25em;
+            margin-bottom: .10em;
+            transition: .3s;
+        }
+
+        .participants>div.local:before {
+            background-color: yellow;
+        }
+
+        .participants>div.ok:before {
+            background-color: green;
+        }
+
+        .participants>div.error:before {
+            background-color: red;
+        }
+
+        .disabled {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading"></div>
+
+    <form name="slug" class="form-slug">
+        <input type="text" name="slug" placeholder="código do evento" autofocus>
+        <button>enviar</button>
+    </form>
+
+    <form name="doc" class="form-doc disabled">
+        <input type="text" name="doc" placeholder="digite Nome ou CPF para pesquisar">
+    </form>
+
+    <div class="activity">
+        <div class="title">...</div>
+    </div>
+
+    <div class="participants">
+        <!-- X X X -->
+    </div>
+
+    <script>
+        let currentSelectedPerson = null;
+        let buff = document.createElement('template');
+        let domParticipants = document.querySelector('.participants');
+        let activity;
+        let slug;
+
+        // -------------------------------------------------------------------
+
+        function setActivityDom(data) {
+            let domActivityTitle = document.querySelector('.activity .title');
+            domActivityTitle.innerHTML = data.title;
+        }
+
+        // -------------------------------------------------------------------
+
+        function setParticipantsDom(data) {
+            data.forEach(person => {
+                let cls = 'visible';
+
+                if (localStorage.getItem(`C:${person.subs}`))
+                    cls = 'local'
+
+                if (person.checked == '1')
+                    cls = 'ok';
+
+                buff.innerHTML += `
+                    <div class='person ${cls}' data-id='${person.id}' data-subs='${person.subs}' data-doc='${person.document_id}' data-name='${person.name} ${person.lastname}'>
+                        ${person.name} ${person.lastname}
+                    </div>
+                `;
+            });
+
+            document.forms.doc.doc.focus();
+            domParticipants.appendChild(buff.content.cloneNode(true));
+            jumpPerson();
+        }
+
+        // -------------------------------------------------------------------
+
+        function jumpPerson(dir) {
+            let person;
+
+            if (dir == 'next')
+                person = currentSelectedPerson.nextElementSibling;
+
+            if (dir == 'prev')
+                person = currentSelectedPerson.previousElementSibling;
+
+            if (!person) {
+                if (!domParticipants.children.length) return;
+                person = domParticipants.children[0];
+            }
+
+            person.scrollIntoView();
+            if (currentSelectedPerson)
+                currentSelectedPerson.classList.remove('selected');
+            person.classList.add('selected');
+            currentSelectedPerson = person;
+        }
+
+        // -------------------------------------------------------------------
+
+        async function check() {
+            if (!currentSelectedPerson || !activity) {
+                alert('selecione alguém para definir a presença.');
+                return;
+            }
+
+            let doc = currentSelectedPerson.dataset.doc;
+            let subs = currentSelectedPerson.dataset.subs;
+            let key = `C:${subs}`;
+
+            let body = new FormData()
+            body.append('slug', slug);
+            body.append('subs', subs);
+
+            if (localStorage.getItem(key) === null) {
+                localStorage.setItem(key, Date.now());
+                let buffCurrentSelectedPerson = buff.content.querySelector(`[data-subs='${subs}']`);
+                currentSelectedPerson.classList.add('local');
+                buffCurrentSelectedPerson.classList.add('local');
+                let req = await fetch(`../../subscription/checkin`, { method: 'POST', body });
+                let res = await req.json();
+                if (res === true) {
+                    currentSelectedPerson.classList.add('ok');
+                    buffCurrentSelectedPerson.classList.add('ok');
+                } else {
+                    currentSelectedPerson.classList.add('error');
+                    buffCurrentSelectedPerson.classList.add('error');
+                }
+                return;
+            }
+
+            localStorage.removeItem(key);
+            currentSelectedPerson.classList.remove('local');
+            buff.content
+                .querySelector(`[data-subs='${currentSelectedPerson.dataset.subs}']`)
+                .classList.remove('local');
+            await fetch(`../../subscription/checkin/cancel`, { method: 'POST', body });
+            let buffCurrentSelectedPerson = buff.content.querySelector(`[data-subs='${subs}']`);
+            currentSelectedPerson.classList.remove('ok');
+            currentSelectedPerson.classList.remove('local');
+            buffCurrentSelectedPerson.classList.remove('ok');
+            buffCurrentSelectedPerson.classList.remove('local');
+        }
+
+        // -------------------------------------------------------------------
+
+        async function loadList() {
+            document.body.classList.add('loading');
+            let req = await fetch(`../../activity/slug/${document.forms.slug.slug.value}`);
+            let res = await req.json();
+            if (!res.activity) {
+                alert('not found');
+                document.body.classList.remove('loading');
+                return;
+            }
+            document.forms.slug.classList.add('disabled');
+            document.forms.doc.classList.remove('disabled');
+            activity = res.activity;
+            setActivityDom(res.activity);
+            setParticipantsDom(res.participants);
+            document.body.classList.remove('loading');
+        }
+
+        // -------------------------------------------------------------------
+
+        document.forms.slug.addEventListener('submit', async ev => {
+            ev.preventDefault();
+            await loadList();
+        });
+
+        // -------------------------------------------------------------------
+
+        document.forms.slug.slug.addEventListener('keyup', async ev => {
+            if (document.forms.slug.slug.value.length >= 8) {
+                await loadList();
+                slug = document.forms.slug.slug.value;
+            }
+        });
+
+        // -------------------------------------------------------------------
+
+        let search;
+
+        document.forms.doc.doc.addEventListener('keydown', ev => {
+            if (ev.which == 27) {
+                document.forms.doc.doc.value = '';
+            }
+
+            if (ev.which == 13) {
+                ev.preventDefault();
+            }
+        })
+
+        // -------------------------------------------------------------------
+
+        let prevVal = '';
+
+        document.forms.doc.doc.addEventListener('keyup', async ev => {
+            ev.preventDefault();
+
+            let val = document.forms.doc.doc.value.toLocaleLowerCase();
+
+            if (val == prevVal)
+                return;
+
+            prevVal = val;
+
+            clearTimeout(search);
+
+            if (val.trim() == '') {
+                domParticipants.innerHTML = '';
+                domParticipants.appendChild(buff.content.cloneNode(true));
+                jumpPerson();
+                return;
+            }
+
+            let prop = 'name';
+
+            if (!isNaN(val))
+                prop = 'doc';
+
+            search = setTimeout(() => {
+                console.log('reload')
+                let tempBuf = buff.cloneNode(true);
+                tempBuf.content.querySelectorAll(`:not([data-${prop}*='${val}'])`).forEach(el => el.remove());
+                domParticipants.innerHTML = '';
+                domParticipants.appendChild(tempBuf.content.cloneNode(true));
+                jumpPerson();
+            }, 0);
+        });
+
+        // -------------------------------------------------------------------
+
+        domParticipants.addEventListener('click', ev => {
+            if (!ev.target.classList.contains('person'))
+                return;
+
+            if (currentSelectedPerson)
+                currentSelectedPerson.classList.remove('selected');
+
+            currentSelectedPerson = ev.target;
+            currentSelectedPerson.classList.add('selected');
+        });
+
+        // -------------------------------------------------------------------
+
+        domParticipants.addEventListener('dblclick', ev => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            ev.stopImmediatePropagation();
+            if (!ev.target.classList.contains('person'))
+                return;
+            check();
+        });
+
+        // -------------------------------------------------------------------
+
+        // domParticipants.addEventListener('click', ev => {
+        //     console.log(ev.target.dataset.id);
+        // });
+
+        // -------------------------------------------------------------------
+
+        window.addEventListener('keydown', ev => {
+            document.forms.doc.doc.focus();
+
+            if (!currentSelectedPerson)
+                return;
+
+            if (ev.which == 13) {
+                ev.preventDefault();
+                check();
+            }
+
+            if (ev.which == 40)
+                return jumpPerson('next');
+
+            if (ev.which == 38)
+                return jumpPerson('prev');
+        })
+    </script>
+</body>
+
+</html>

@@ -15,7 +15,7 @@ const validateEmail = (email: string) => {
 export const validatePass = (pass: string) => {
     if (
         // !/[A-Z]/.test(pass) ||
-        !/[\.$@$!%*#?&]/.test(pass) || 
+        !/[\.$@$!%*#?&]/.test(pass) ||
         pass.length < 6
     ) throw {
         err: true,
@@ -101,29 +101,37 @@ let registerTemplate = (
 
 const validateData = async (conn: Connection, data: any) => {
     let document_id = (data.document_id || '').replace(/[\.-]/g, '')
-    if (!testCPF(document_id)) throw {
-        err: true,
-        msg: 'Número de CPF inválido.'
+    if (data.document_id !== null)
+        if (!testCPF(document_id)) throw {
+            err: true,
+            msg: 'Número de CPF inválido.'
+        }
+
+    let email;
+    if (data.email) {
+        email = data.email.trim();
+
+        if (!validateEmail(email)) throw {
+            err: true,
+            msg: 'Email inválido.'
+        }
+
+        let checkMail = await conn.query('SELECT 1 FROM person WHERE email=?', [email]);
+
+        if (checkMail.length) throw {
+            err: true,
+            msg: `O e-mail informado já existe em nossa base de dados, tente recuperar senha.`
+        }
     }
 
-    let email = data.email.trim();
-    if (!validateEmail(email)) throw {
-        err: true,
-        msg: 'Email inválido.'
-    }
+    let checkCpf
+    if (data.document_id) {
+        checkCpf = await conn.query('SELECT 1 FROM person WHERE document_id=?', [document_id]);
 
-    let checkMail = await conn.query('SELECT 1 FROM person WHERE email=?', [email]);
-
-    if (checkMail.length) throw {
-        err: true,
-        msg: `O e-mail informado já existe em nossa base de dados, tente recuperar senha.`
-    }
-
-    let checkCpf = await conn.query('SELECT 1 FROM person WHERE document_id=?', [document_id]);
-
-    if (checkCpf.length) throw {
-        err: true,
-        msg: `O CPF informado já existe em nossa base de dados, tente recuperar senha.`
+        if (checkCpf.length) throw {
+            err: true,
+            msg: `O CPF informado já existe em nossa base de dados, tente recuperar senha.`
+        }
     }
 
     if (
@@ -149,8 +157,6 @@ const validateData = async (conn: Connection, data: any) => {
         err: true,
         msg: `O seu nome e sobrenome não podem ser vazios.`
     }
-
-    validatePass(data.password);
 
     return {
         name: data.name.toLocaleLowerCase().trim(),
@@ -182,6 +188,8 @@ export class Person {
         email: string,
         password: string
     }) {
+        validatePass(data.password);
+
         let conn = await connection();
         let person = await validateData(conn, data);
         let personKeys = Object.keys(person);
@@ -189,7 +197,7 @@ export class Person {
         let pInfo = await conn.query(`INSERT INTO person(${personKeys.join(', ')}) VALUES(${'?, '.repeat(personVals.length - 1)} ?)`, personVals);
         let lInfo = await Login.register(pInfo.insertId, data.email, data.password);
         let ses = new Session().id;
-        
+
         let info = await transporter.sendMail({
             from: '"eTic" <etic@ifc.edu.br>',
             to: person.email,
@@ -219,6 +227,7 @@ export class Person {
             birth_city: number,
             current_city: number,
             current_school: number,
+            document_id?: any,
             // login data
             email: string,
             password: string
@@ -229,9 +238,11 @@ export class Person {
 
         if (!session) throw {
             err: true,
-            msg: 'você precisa logar-se para alterar seus dados'
+            msg: 'você precisa logar-se para alterar seus dados',
         };
-        
+
+        data.document_id = null;
+
         let d = await validateData(conn, data);
 
         let person = {
@@ -241,13 +252,17 @@ export class Person {
             "birth_city=?": d.birth_city,
             "current_city=?": d.current_city,
             "current_school=?": d.current_school,
-            "email=?": d.email,
+            // "email=?": d.email,
         };
 
         let personKeys = Object.keys(person);
         let personVals = Object.values(person);
         let pInfo = await conn.query(`UPDATE person SET ${personKeys.join(', ')} WHERE id=? LIMIT 1`, [...personVals, session.store.person]);
-        let lInfo = await Login.alter(session.store.login, d.email, data.password);
+        let lInfo;
+        if (data.password && data.password.trim() !== '') {
+            validatePass(data.password);
+            lInfo = await Login.alter(session.store.login, d.email, data.password);
+        }
         return true;
     }
 

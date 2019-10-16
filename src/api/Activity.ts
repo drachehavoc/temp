@@ -33,7 +33,54 @@ export class Activity {
             ]
         );
         return res;
+    }
 
+    static async getBySlug(slug: string) {
+        let conn = await connection();
+        let res = await conn.query(`
+            SELECT 
+                activity.id, 
+                title,
+                subtitle,
+                description,
+                seats,
+                start_at,
+                duration, 
+                activity_type_id,
+                location
+            FROM 
+                activity 
+            WHERE 
+                slug=?
+            LIMIT 
+                1
+            `, [
+                slug
+            ]
+        );
+
+        let resParticipantes = await conn.query(`
+            SELECT 
+                person.id, name, 
+                subscription.id as subs, 
+                lastname, document_id,
+                check_in IS NOT NULL AS checked
+            FROM 
+                person 
+                JOIN subscription ON person.id=person_id 
+            WHERE 
+                activity_id=? 
+            ORDER BY 
+                name
+            `, [
+                res[0].id
+            ]
+        );
+
+        return {
+            activity: res[0],
+            participants: resParticipantes
+        };
     }
 
     static async getTypes() {

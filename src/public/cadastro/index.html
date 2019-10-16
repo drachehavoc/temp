@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Cadastro</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
-    <script defer type="module" src="main.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         @keyframes blinker {
@@ -300,6 +299,11 @@
             margin: .5em;
         }
 
+        .modal .content form input[name=lastname],
+        .modal .content form input[name=name] {
+            text-transform: capitalize
+        }
+
         .modal .content .buttons {
             display: flex;
             justify-content: space-between;
@@ -364,6 +368,9 @@
         </a>
         <a class="button logout" href="#">
             <i class="material-icons">exit_to_app</i> Sair
+        </a>
+        <a data-modal="cadastro" class="button login" href="#">
+            <i class="material-icons">post_add</i> Inscrever-me
         </a>
     </header>
     <header class="cad">
@@ -539,7 +546,7 @@
             </div>
         </div>
     </div>
-
+    <script type="module" src="main.js"></script>
     <script src="http://cdn.jsdelivr.net/npm/vanilla-masker@1.1.1/build/vanilla-masker.min.js"></script>
     <script>
         VMasker(document.querySelectorAll("[name=document_id]")).maskPattern("999.999.999-99")

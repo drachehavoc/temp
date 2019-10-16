@@ -47,6 +47,16 @@ const domLogin = async () => {
         document.querySelector('header.cad').style.display = "none";
         document.querySelector('header.log').style.display = "flex";
         document.querySelector('header.log span.username').innerHTML = data.name;
+        let modal = document.querySelector('div.modal.cadastro');
+        let cad = modal.querySelector('form');
+        cad.classList.add('alter');
+        modal.querySelector('button.register-person').childNodes[1].textContent = "Alterar"
+        cad.querySelector('[name=document_id]').closest('label').remove();
+        cad.querySelector('[name=email]').closest('label').remove();
+        cad.querySelector('[name=indication]').closest('label').remove();
+
+        data.birth = new Date(data.birth).toISOString().substr(0, 10);
+        Array.from(cad.elements).forEach(el => el.value = data[el.name] || '');
     }
 }
 
@@ -121,10 +131,16 @@ document
         startLoading();
         evt.preventDefault();
         let form = evt.target.closest('.content').querySelector('form');
-        let request = await fetch('../../person', {
-            method: 'POST',
-            body: new FormData(form)
-        });
+        let request = await fetch(
+            `../../person?ses=${localStorage.getItem('ses') || ''}`,
+            {
+                method: form.classList.contains('alter')
+                    ? 'PUT'
+                    : 'POST',
+                body: new FormData(form)
+            }
+        );
+
         let response = await request.json()
 
         if (response.err == true) {
@@ -258,7 +274,7 @@ document
 
 (async () => {
     startLoading();
-    domLogin();
+    await domLogin();
 
     let container = document.querySelector('main');
     let [activities, types, cities] = await Promise.all([
