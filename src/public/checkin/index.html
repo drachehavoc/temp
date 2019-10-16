@@ -4,8 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Check-in</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <style>
         * {
+            box-sizing: border-box;
             font-family: sans-serif;
             -webkit-touch-callout: none;
             -webkit-user-select: none;
@@ -84,6 +87,16 @@
             padding: 1vw;
             color: #FFFFFF;
             cursor: pointer;
+            border: .25em solid transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .participants>div button {
+            background-size: 50% auto;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         .participants>div:nth-child(2n+1) {
@@ -91,40 +104,69 @@
         }
 
         .participants>div:hover {
-            background-color: #FFFFFF66
+            border-color: #FFFFFF66
         }
 
-        .participants>div.selected {
-            background: #FFFFFF;
+        .participants>div.local {
+            background-color: yellow;
             color: #000000;
         }
 
-        .participants>div:before {
-            content: ' ';
-            width: .5em;
-            height: .5em;
-            background-color: #cccccc;
-            display: inline-block;
-            border-radius: 50%;
-            margin-right: .25em;
-            margin-bottom: .10em;
-            transition: .3s;
+        .participants>div.ok {
+            background-color: #46D386;
+            color: #000000;
         }
 
-        .participants>div.local:before {
-            background-color: yellow;
+        .participants>div.local button,
+        .participants>div.ok button {
+            background-image: url(https://image.flaticon.com/icons/svg/60/60731.svg);
         }
 
-        .participants>div.ok:before {
-            background-color: green;
+        @keyframes selected {
+            50% {
+                border-color: transparent;
+            }
         }
 
-        .participants>div.error:before {
+        .participants>div.selected {
+            border-color: #83D0F2;
+            animation: selected 3s infinite;
+            transition: 0.3ms;
+        }
+
+        .participants>div button {
+            font-size: 1em;
+            width: 7vw;
+            height: 7vw;
+        }
+
+        .participants>div.error {
             background-color: red;
+        }
+
+        .participants>div.error button {
+            background-image: url(https://image.flaticon.com/icons/svg/151/151882.svg)
         }
 
         .disabled {
             display: none;
+        }
+
+        @media (max-width: 960px) {
+
+            .form-slug input,
+            .form-doc input {
+                font-size: 150%;
+            }
+
+            .activity {
+                font-size: 150%;
+            }
+
+            .participants>div {
+                font-size: 150%;
+                padding: 1.25em;
+            }
         }
     </style>
 </head>
@@ -134,7 +176,6 @@
 
     <form name="slug" class="form-slug">
         <input type="text" name="slug" placeholder="código do evento" autofocus>
-        <button>enviar</button>
     </form>
 
     <form name="doc" class="form-doc disabled">
@@ -177,7 +218,7 @@
 
                 buff.innerHTML += `
                     <div class='person ${cls}' data-id='${person.id}' data-subs='${person.subs}' data-doc='${person.document_id}' data-name='${person.name} ${person.lastname}'>
-                        ${person.name} ${person.lastname}
+                        ${person.name} ${person.lastname} <button class='check'></button>
                     </div>
                 `;
             });
@@ -203,7 +244,7 @@
                 person = domParticipants.children[0];
             }
 
-            person.scrollIntoView();
+            person.scrollIntoViewIfNeeded();
             if (currentSelectedPerson)
                 currentSelectedPerson.classList.remove('selected');
             person.classList.add('selected');
@@ -263,7 +304,8 @@
             let req = await fetch(`../../activity/slug/${document.forms.slug.slug.value}`);
             let res = await req.json();
             if (!res.activity) {
-                alert('not found');
+                alert('código de evento não localizado, verifique e tente novamente.');
+                document.forms.slug.slug.value = '';
                 document.body.classList.remove('loading');
                 return;
             }
@@ -334,9 +376,8 @@
                 prop = 'doc';
 
             search = setTimeout(() => {
-                console.log('reload')
                 let tempBuf = buff.cloneNode(true);
-                tempBuf.content.querySelectorAll(`:not([data-${prop}*='${val}'])`).forEach(el => el.remove());
+                tempBuf.content.querySelectorAll(`div:not([data-${prop}*='${val}'])`).forEach(el => el.remove());
                 domParticipants.innerHTML = '';
                 domParticipants.appendChild(tempBuf.content.cloneNode(true));
                 jumpPerson();
@@ -346,14 +387,19 @@
         // -------------------------------------------------------------------
 
         domParticipants.addEventListener('click', ev => {
-            if (!ev.target.classList.contains('person'))
+            let cl = ev.target.closest('.person');
+
+            if (!cl || !cl.classList.contains('person'))
                 return;
 
             if (currentSelectedPerson)
                 currentSelectedPerson.classList.remove('selected');
 
-            currentSelectedPerson = ev.target;
+            currentSelectedPerson = cl;
             currentSelectedPerson.classList.add('selected');
+
+            if (ev.target.classList.contains('check')) 
+                check();
         });
 
         // -------------------------------------------------------------------
