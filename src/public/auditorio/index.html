@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Checkin</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .wait{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: #9D1A20;
+            font-size: 9vmin;
+            color: #FFF;
+            padding: 1em;
+            width: 100%;
+        }
+
+        .disabled {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="formAct disabled" name="act">
+        <select class="activity" name="activity"></select>
+        <button>alterar</button>
+    </form>
+
+    <form class="disabled" name="user">
+        <div class="title">...</div>
+        <input type="text" name="cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
+            title="Digite o CPF no formato 000.000.000-00">
+        <button>chek-in</button>
+    </form>
+
+    <div class="wait disabled">
+        O checkin ainda não foi aberto! aguarde.
+    </div>
+
+    <div class="access disabled">
+        <div class="name"></div>
+        <div class="lastname"></div>
+    </div>
+
+    <form class="disabled" name="phase2">
+        <input name="name" placeholder="informe seu primeiro nome">
+        <input name="lastname" placeholder="informe seu sobrenome">
+        <input name="email" type="email" placeholder="informe seu e-mail">
+        <button>checkin</button>
+    </form>
+
+    <script src="http://cdn.jsdelivr.net/npm/vanilla-masker@1.1.1/build/vanilla-masker.min.js"></script>
+    <script>
+        VMasker(document.querySelectorAll("[name=cpf]")).maskPattern("999.999.999-99")
+        const domFormAct = document.querySelector('.formAct');
+        const domActivity = domFormAct.querySelector('select.activity');
+
+        const loadCheckin = async () => {
+            document.body.classList.add('loading');
+            let reqAct = await fetch('../../checkin/auditorio/current');
+            let resAct = await reqAct.json();
+
+            if (reqAct && resAct.id) {
+                document.forms.user.querySelector('.title').innerHTML = resAct.title;
+                document.forms.user.classList.remove('disabled');
+            } else {
+                document.querySelector('.wait').classList.remove('disabled');
+            }
+
+            document.body.classList.remove('loading');
+        }
+
+        const loadChange = async hash => {
+            document.body.classList.add('loading');
+            let key = document.location.hash.substr(1);
+            let body = new FormData();
+            body.append("hash", key);
+            let req = await fetch('../../login/secret', { method: "POST", body })
+            let res = await req.json();
+            if (res) {
+                let reqAct = await fetch('../../activity?event=1');
+                let resAct = await reqAct.json();
+                let ops = resAct.map(v => `<option value="${v.id}">${v.title}</option>`)
+                domActivity.innerHTML = '<option value="">--- desabilitar ---</option>' + ops.join('');
+                domFormAct.classList.remove('disabled');
+                document.body.classList.remove('loading')
+                return;
+            }
+            domFormAct.classList.add('disabled');
+            domActivity.innerHTML = "";
+            document.body.classList.remove('loading')
+        }
+
+        const goin = (name, lastname) => {
+            let domRoot = document.querySelector('.access');
+            let domName = domRoot.querySelector('.name');
+            let domLastname = domRoot.querySelector('.lastname');
+            domName.innerText = name;
+            domLastname.innerText = lastname;
+            document.forms.phase2.classList.add('disabled');
+            domRoot.classList.remove('disabled');
+        }
+
+        const goPhase2 = (name, lastname, email) => {
+            document.forms.phase2.name.value = name || '';
+            document.forms.phase2.lastname.value = lastname || '';
+            document.forms.phase2.email.value = email || '';
+            document.forms.phase2.classList.remove('disabled');
+        }
+
+        document.location.hash
+            ? loadChange(document.location.hash)
+            : loadCheckin();
+
+        document.forms.act.addEventListener('submit', async ev => {
+            ev.preventDefault();
+            document.body.classList.add('loading')
+            let key = document.location.hash.substr(1);
+            let body = new FormData();
+            body.append('hash', key);
+            body.append('act', document.forms.act.activity.value)
+            let alterReq = await fetch('../../checkin/auditorio/select', { method: 'POST', body });
+            let alterRes = await alterReq.json();
+            if (!alterRes) {
+                alert('erro ao alterar, chama o Daniel no ZAP!');
+            } else {
+                domFormAct.classList.add('disabled');
+                domActivity.innerHTML = "";
+            }
+            document.body.classList.remove('loading')
+        });
+
+        document.forms.user.addEventListener('submit', async ev => {
+            ev.preventDefault();
+
+            let body = new FormData();
+
+            body.append('cpf', document.forms.user.cpf.value);
+
+            let rightReq = await fetch('../../checkin/auditorio/right', { method: "POST", body });
+
+            let rightRes = await rightReq.json();
+
+            if (!rightRes)
+                return goPhase2();
+
+            if (rightRes && !rightRes.act)
+                return goPhase2(rightRes.name, rightRes.lastname, rightRes.email);
+
+            goin(rightRes.name, rightRes.lastname);
+        });
+
+        document.forms.phase2.addEventListener('submit', async ev => {
+            ev.preventDefault();
+            let body = new FormData();
+            body.append('cpf', document.forms.user.cpf.value);
+            body.append('name', document.forms.phase2.name.value);
+            body.append('lastname', document.forms.phase2.lastname.value);
+            body.append('email', document.forms.phase2.email.value);
+            let leftReq = await fetch('../../checkin/auditorio/left', { method: "POST", body });
+            let leftRes = await leftReq.json();
+            console.log(leftRes);
+        });
+
+        window.addEventListener("hashchange", () => loadChange(document.location.hash), false);
+    </script>
+</body>
+
+</html>

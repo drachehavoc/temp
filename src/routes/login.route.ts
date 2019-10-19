@@ -28,6 +28,14 @@ router.get('/check',
         []
     ));
 
+router.post('/secret',
+    upload.none(),
+    finder(
+        Login.checkSecret,
+        [],
+        ["hash"]
+    ));
+
 router.post('/',
     upload.none(),
     finder(

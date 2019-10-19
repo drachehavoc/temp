@@ -4,7 +4,7 @@ import { Event } from '../api/Event';
 import { finder } from '../api/finder';
 
 const upload = multer();
-const router = express.Router()
+const router = express.Router();
 
 router.get('/',
     finder(

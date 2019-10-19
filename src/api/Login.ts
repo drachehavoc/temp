@@ -182,7 +182,6 @@ export class Login {
     }
 
     static async find(login: string, pass: string) {
-
         let secret = await Login.secret(login, pass);
         let conn = await connection();
         let stream = conn.queryStream('SELECT id, person_id, group_id FROM login WHERE secret_key=? LIMIT 1', [secret]);
@@ -213,5 +212,11 @@ export class Login {
         let session = Session.find(ses);
         if (session) session.selfDestruct();
         return (session) ? true : false;
+    }
+
+    static async checkSecret(secret: string) {
+        let conn = await connection();
+        let query = await conn.query('SELECT id FROM login WHERE secret_key=? LIMIT 1', [secret]);
+        return (query[0]) ? true : false;
     }
 }

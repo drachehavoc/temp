@@ -29,8 +29,8 @@ export class Activity {
             LIMIT 
                 100
             `, [
-                event_id
-            ]
+            event_id
+        ]
         );
         return res;
     }
@@ -55,8 +55,8 @@ export class Activity {
             LIMIT 
                 1
             `, [
-                slug
-            ]
+            slug
+        ]
         );
 
         let resParticipantes = await conn.query(`
@@ -73,8 +73,8 @@ export class Activity {
             ORDER BY 
                 name
             `, [
-                res[0].id
-            ]
+            res[0].id
+        ]
         );
 
         return {
