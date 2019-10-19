@@ -157,12 +157,12 @@
             <i class="material-icons">
                 keyboard_arrow_down
             </i>
-            Parece que você não se inscreveu para esta atividade, mas não se preocuper, nos informe seu nome,
-            sobrenome e e-mail, que caso ainda tenham vagas te encaixaremos ^^.
+            Parece que você não se inscreveu para esta atividade, mas não se preocupe, nos informe seu nome,
+            sobrenome e e-mail, que caso ainda existam vagas remanacentes nós te encaixaremos ^^.
             <i class="material-icons">
                 keyboard_arrow_down
             </i>
-            ou verifique seu CPF informado e clique em checkin novamente.
+            ou caso você tenha inscrito na atividade, verifique seu CPF informado e clique novamente em checkin.
             <i class="material-icons">
                 keyboard_arrow_down
             </i>
@@ -286,6 +286,9 @@
 
             let rightRes = await rightReq.json();
 
+            if (rightRes && rightRes.err)
+                return alert(rightRes.msg);
+
             if (!rightRes)
                 return goPhase2();
 
@@ -304,6 +307,10 @@
             body.append('email', document.forms.phase2.email.value);
             let leftReq = await fetch('../../checkin/auditorio/left', { method: "POST", body });
             let leftRes = await leftReq.json();
+
+            if (leftRes && leftRes.err)
+                return alert(leftRes.msg);
+
             if (leftRes)
                 goin2(document.forms.phase2.name.value, document.forms.phase2.lastname.value);
         });

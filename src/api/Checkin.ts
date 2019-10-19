@@ -1,5 +1,6 @@
 import { connection } from "./connection";
 import { Login } from "./Login";
+import { testCPF, validateEmail } from "./Person";
 
 export class Checkin {
     static auditorio: any = null;
@@ -20,8 +21,15 @@ export class Checkin {
     }
 
     static async right(cpf: string) {
+        cpf = (cpf || '').replace(/[\.-]/g, '')
+
+        if (!testCPF(cpf)) throw {
+            err: true,
+            msg: 'Número de CPF inválido.'
+        }
+
         let conn = await connection();
-        let query = await conn.query('SELECT id, name, lastname, email FROM person WHERE document_id=?', [cpf.replace(/[\.-]/g, '')]);
+        let query = await conn.query('SELECT id, name, lastname, email FROM person WHERE document_id=?', [cpf]);
         if (!query[0]) return false;
         let person = query[0];
         query = await conn.query('SELECT id, check_in FROM subscription WHERE person_id=? AND activity_id=?', [person.id, Checkin.auditorio.id]);
@@ -33,6 +41,34 @@ export class Checkin {
     }
 
     static async left(cpf: string, name: string, lastname: string, email: string) {
+        cpf = (cpf || '').replace(/[\.-]/g, '')
+        name = name || '';
+        lastname = lastname || '';
+        email = email || '';
+
+        if (!testCPF(cpf)) throw {
+            err: true,
+            msg: 'Número de CPF inválido.'
+        }
+
+        if (name.trim() == '' || name.length < 3) throw {
+            err: true,
+            msg: 'Não deixe o campo nome em branco.'
+        }
+
+        if (lastname.trim() == '' || lastname.length < 3) throw {
+            err: true,
+            msg: 'Não deixe o campo sobrenome em branco.'
+        }
+
+
+        email = email.trim();
+
+        if (!validateEmail(email)) throw {
+            err: true,
+            msg: 'Email inválido.'
+        }
+
         let conn = await connection();
         let query = await conn.query('INSERT INTO outsider(activity_id, document_id, name, lastname, email) VALUES(?, ?, ?, ?, ?)', [
             Checkin.auditorio.id,
