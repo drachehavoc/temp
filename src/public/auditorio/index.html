@@ -14,7 +14,14 @@
             font-family: 'Roboto', sans-serif;
         }
 
-        .wait{
+        body,
+        html {
+            padding: 0 0 10vw 0;
+            margin: 0;
+            border: 0 none;
+        }
+
+        .wait {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -30,37 +37,152 @@
         .disabled {
             display: none;
         }
+
+        form.user .detail {
+            text-align: center;
+            background: #000;
+            color: #FFF;
+            padding: .5em;
+        }
+
+        form.user .title {
+            text-align: center;
+            background: #96C624;
+            padding: 1em;
+            font-size: 8vmin;
+        }
+
+        form.phase2 i {
+            display: block;
+            font-size: 130%
+        }
+
+        form.phase2 span {
+            padding: 1em;
+            background: #9D1A20;
+            display: block;
+            text-align: center;
+            margin: 1em 0;
+            font-size: 6vmin;
+            color: #FFF;
+        }
+
+        input {
+            margin: .25em auto;
+            display: block;
+            font-size: 8vmin;
+            text-align: center;
+            padding: .25em;
+        }
+
+        button {
+            margin: 0 auto;
+            display: block;
+            font-size: 8vmin;
+            border-radius: 5px;
+            border: 0 none;
+            padding: 0.25em 1em;
+        }
+
+        .access {
+            background: green;
+            position: absolute;
+            bottom: 4%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6vmin;
+            width: 90%;
+            padding: .25em;
+            text-align: center;
+            border-radius: 10px;
+            color: #FFF;
+        }
+
+        .access2 {
+            background: orangered;
+            position: absolute;
+            bottom: 4%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6vmin;
+            width: 90%;
+            padding: .25em;
+            text-align: center;
+            border-radius: 10px;
+            color: #FFF;
+        }
+
+        .access2 div,
+        .access div {
+            display: inline;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
     </style>
 </head>
 
 <body>
     <form class="formAct disabled" name="act">
         <select class="activity" name="activity"></select>
-        <button>alterar</button>
+        <button>
+            alterar
+        </button>
     </form>
 
-    <form class="disabled" name="user">
+    <form class="user disabled" name="user">
+        <div class="detail">faça seu chek-in no evento:</div>
         <div class="title">...</div>
-        <input type="text" name="cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
+        <input type="text" name="cpf" autofocus placeholder="CPF" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"
             title="Digite o CPF no formato 000.000.000-00">
-        <button>chek-in</button>
+        <button>
+            <i class="material-icons">
+                swap_horizontal_circle
+            </i>
+            chek-in
+        </button>
     </form>
 
     <div class="wait disabled">
-        O checkin ainda não foi aberto! aguarde.
+        O check-in ainda não foi aberto! aguarde.
     </div>
 
     <div class="access disabled">
+        seja bem vindo:
         <div class="name"></div>
-        <div class="lastname"></div>
+        <div class="lastname"></div>, mostre esta tela na entrada.
     </div>
 
-    <form class="disabled" name="phase2">
-        <input name="name" placeholder="informe seu primeiro nome">
-        <input name="lastname" placeholder="informe seu sobrenome">
-        <input name="email" type="email" placeholder="informe seu e-mail">
-        <button>checkin</button>
+    <form class="phase2 disabled" name="phase2">
+        <span>
+            <i class="material-icons">
+                keyboard_arrow_down
+            </i>
+            Parece que você não se inscreveu para esta atividade, mas não se preocuper, nos informe seu nome,
+            sobrenome e e-mail, que caso ainda tenham vagas te encaixaremos ^^.
+            <i class="material-icons">
+                keyboard_arrow_down
+            </i>
+            ou verifique seu CPF informado e clique em checkin novamente.
+            <i class="material-icons">
+                keyboard_arrow_down
+            </i>
+        </span>
+        <input name="name" placeholder="nome">
+        <input name="lastname" placeholder="sobrenome">
+        <input name="email" type="email" placeholder="e-mail">
+        <button>
+            <i class="material-icons">
+                swap_horiz
+            </i>
+            check-in avulso!
+        </button>
     </form>
+
+    <div class="access2 disabled">
+        Olá
+        <div class="name"></div>
+        <div class="lastname"></div>, aguarde a segunda porta abrir e mostre esta tela na entrada.
+    </div>
 
     <script src="http://cdn.jsdelivr.net/npm/vanilla-masker@1.1.1/build/vanilla-masker.min.js"></script>
     <script>
@@ -106,6 +228,16 @@
 
         const goin = (name, lastname) => {
             let domRoot = document.querySelector('.access');
+            let domName = domRoot.querySelector('.name');
+            let domLastname = domRoot.querySelector('.lastname');
+            domName.innerText = name;
+            domLastname.innerText = lastname;
+            document.forms.phase2.classList.add('disabled');
+            domRoot.classList.remove('disabled');
+        }
+
+        const goin2 = (name, lastname) => {
+            let domRoot = document.querySelector('.access2');
             let domName = domRoot.querySelector('.name');
             let domLastname = domRoot.querySelector('.lastname');
             domName.innerText = name;
@@ -172,7 +304,8 @@
             body.append('email', document.forms.phase2.email.value);
             let leftReq = await fetch('../../checkin/auditorio/left', { method: "POST", body });
             let leftRes = await leftReq.json();
-            console.log(leftRes);
+            if (leftRes)
+                goin2(document.forms.phase2.name.value, document.forms.phase2.lastname.value);
         });
 
         window.addEventListener("hashchange", () => loadChange(document.location.hash), false);
