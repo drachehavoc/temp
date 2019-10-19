@@ -12,6 +12,7 @@
         * {
             box-sizing: border-box;
             font-family: 'Roboto', sans-serif;
+            background: #991A1F;
         }
 
         body,
@@ -73,6 +74,7 @@
             font-size: 8vmin;
             text-align: center;
             padding: .25em;
+            width: 90%;
         }
 
         button {
@@ -84,32 +86,26 @@
             padding: 0.25em 1em;
         }
 
-        .access {
-            background: green;
+        .access-def {
             position: absolute;
             bottom: 4%;
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 6vmin;
             width: 90%;
-            padding: .25em;
+            padding: .25em 1em;
             text-align: center;
             border-radius: 10px;
             color: #FFF;
+            box-shadow: 0px 0px 130px #000;
+        }
+
+        .access {
+            background: green;
         }
 
         .access2 {
             background: orangered;
-            position: absolute;
-            bottom: 4%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 6vmin;
-            width: 90%;
-            padding: .25em;
-            text-align: center;
-            border-radius: 10px;
-            color: #FFF;
         }
 
         .access2 div,
@@ -146,7 +142,7 @@
         O check-in ainda não foi aberto! aguarde.
     </div>
 
-    <div class="access disabled">
+    <div class="access-def access disabled">
         seja bem vindo:
         <div class="name"></div>
         <div class="lastname"></div>, mostre esta tela na entrada.
@@ -178,7 +174,7 @@
         </button>
     </form>
 
-    <div class="access2 disabled">
+    <div class="access-def access2 disabled">
         Olá
         <div class="name"></div>
         <div class="lastname"></div>, aguarde a segunda porta abrir e mostre esta tela na entrada.
