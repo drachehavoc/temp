@@ -56,7 +56,11 @@ const domLogin = async () => {
         cad.querySelector('[name=indication]').closest('label').remove();
 
         data.birth = new Date(data.birth).toISOString().substr(0, 10);
-        Array.from(cad.elements).forEach(el => el.value = data[el.name] || '');
+        Array.from(cad.elements).forEach(el => {
+            console.log(el, data[el.name])
+
+            el.value = data[el.name] || ''
+        });
     }
 }
 
@@ -274,7 +278,6 @@ document
 
 (async () => {
     startLoading();
-    await domLogin();
 
     let container = document.querySelector('main');
     let [activities, types, cities] = await Promise.all([
@@ -295,6 +298,9 @@ document
             return opts.join('');
         })()
     ]);
+
+    await domLogin();
+
     endLoading()
 
     document

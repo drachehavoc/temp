@@ -68,6 +68,7 @@
             color: #FFF;
         }
 
+        select,
         input {
             margin: .25em auto;
             display: block;
@@ -75,6 +76,10 @@
             text-align: center;
             padding: .25em;
             width: 90%;
+        }
+
+        select {
+            font-size: 80%;
         }
 
         button {
@@ -273,6 +278,7 @@
 
         document.forms.user.addEventListener('submit', async ev => {
             ev.preventDefault();
+            document.querySelectorAll('.access-def').forEach(el => el.classList.add('disabled'));
 
             let body = new FormData();
 
@@ -284,6 +290,10 @@
 
             if (rightRes && rightRes.err)
                 return alert(rightRes.msg);
+
+
+            if (rightRes && rightRes.id === null)
+                return goin2(rightRes.name, rightRes.lastname);
 
             if (!rightRes)
                 return goPhase2();

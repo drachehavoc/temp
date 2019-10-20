@@ -20,8 +20,48 @@ export class Checkin {
         return Checkin.auditorio || false;
     }
 
+    static async getAuditorioPersons() {
+        if (!Checkin.auditorio)
+            return [];
+        let conn = await connection();
+        let query = await conn.query(`
+            (
+                SELECT 
+                    name, 
+                    lastname, 
+                    0 AS outsider, 
+                    check_in 
+                FROM 
+                    subscription 
+                    JOIN person ON person.id = person_id 
+                WHERE 
+                    check_in IS NOT NULL AND 
+                    activity_id=?
+            ) UNION (
+                SELECT DISTINCT 
+                    name, 
+                    lastname, 
+                    1 AS outsider, 
+                    date AS check_in 
+                FROM 
+                    outsider 
+                WHERE 
+                    activity_id=? 
+                GROUP BY 
+                    document_id
+            ) 
+            ORDER BY 
+                check_in DESC        
+                `, [Checkin.auditorio.id, Checkin.auditorio.id]);
+        return query;
+    }
+
     static async right(cpf: string) {
-        cpf = (cpf || '').replace(/[\.-]/g, '')
+        cpf = (cpf || '').replace(/[\.-]/g, '');
+
+        let outsider = null;
+        let inscricao = null;
+        let person = null;
 
         if (!testCPF(cpf)) throw {
             err: true,
@@ -29,15 +69,34 @@ export class Checkin {
         }
 
         let conn = await connection();
-        let query = await conn.query('SELECT id, name, lastname, email FROM person WHERE document_id=?', [cpf]);
-        if (!query[0]) return false;
-        let person = query[0];
-        query = await conn.query('SELECT id, check_in FROM subscription WHERE person_id=? AND activity_id=?', [person.id, Checkin.auditorio.id]);
-        if (!query[0]) return { ...person, act: null };
-        let act = query[0];
-        if (!act.check_in)
-            await conn.query('UPDATE subscription SET check_in=NOW() WHERE person_id=? AND activity_id=?', [person.id, Checkin.auditorio.id]);
-        return { ...person, act };
+
+        // find person
+        let query = await conn.query('SELECT id, name, lastname, email FROM person WHERE document_id=? LIMIT 1', [cpf]);
+
+        person = query[0];
+
+        if (person)
+            inscricao = await conn.query('SELECT id, check_in FROM subscription WHERE person_id=? AND activity_id=? LIMIT 1', [person.id, Checkin.auditorio.id]);
+        else
+            outsider = await conn.query('SELECT null as id, name, lastname, email FROM outsider WHERE activity_id=? AND document_id=? LIMIT 1', [Checkin.auditorio.id, cpf]);
+
+        if (outsider && outsider[0]) return {
+            ...outsider[0],
+            act: null
+        };
+
+        if (!inscricao) return {
+            ...person,
+            act: null
+        }
+
+        if (!inscricao[0].check_in)
+            await conn.query('UPDATE subscription SET check_in=NOW() WHERE person_id=? AND activity_id=? LIMIT 1', [person.id, Checkin.auditorio.id]);
+
+        return {
+            ...person,
+            act: inscricao[0]
+        };
     }
 
     static async left(cpf: string, name: string, lastname: string, email: string) {
@@ -70,9 +129,15 @@ export class Checkin {
         }
 
         let conn = await connection();
-        let query = await conn.query('INSERT INTO outsider(activity_id, document_id, name, lastname, email) VALUES(?, ?, ?, ?, ?)', [
+
+        let query = await conn.query('SELECT id FROM outsider WHERE activity_id=? AND document_id=? LIMIT 1', [Checkin.auditorio.id, cpf,])
+
+        if (query[0])
+            return true;
+
+        query = await conn.query('INSERT INTO outsider(activity_id, document_id, name, lastname, email) VALUES(?, ?, ?, ?, ?)', [
             Checkin.auditorio.id,
-            cpf.replace(/[\.-]/g, ''),
+            cpf,
             name,
             lastname,
             email

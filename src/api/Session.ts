@@ -17,8 +17,7 @@ export class Session {
 
     static find(id: string, throwErr: boolean = false) {
         let ses = sessionList.get(id);
-        if (!ses)
-            return null;
+        if (!ses) return null;
         ses.timer();
         return ses;
     }

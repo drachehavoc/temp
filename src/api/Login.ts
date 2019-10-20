@@ -181,8 +181,8 @@ export class Login {
         return (session) ? true : false;
     }
 
-    static async find(login: string, pass: string) {
-        let secret = await Login.secret(login, pass);
+    static async find(email: string, pass: string) {
+        let secret = await Login.secret(email, pass);
         let conn = await connection();
         let stream = conn.queryStream('SELECT id, person_id, group_id FROM login WHERE secret_key=? LIMIT 1', [secret]);
         return new Promise(async (resolve, reject) => {
@@ -190,6 +190,7 @@ export class Login {
                 let session = new Session({
                     person: row.person_id,
                     login: row.id,
+                    email,
                     group: row.group_id,
                     permissions: new Set<string>()
                 });

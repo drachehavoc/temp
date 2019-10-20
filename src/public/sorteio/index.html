@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            background: #000000;
+            font-family: sans-serif;
+            cursor: none;
+        }
+
+        @keyframes toCenter {
+            90% {
+                transform: translate(0%, 0%);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(0%, 0%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes destroySorteado {
+            50% {
+                box-shadow: 0px 0px 0vh 0vh #000000;
+            }
+            
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .el {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            opacity: 0;
+            height: 70vh;
+            width: 40vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+
+            font-size: 3vmax;
+            text-transform: capitalize;
+            color: #FFFFFF;
+        }
+
+        .anim {
+            animation: toCenter 10s forwards;
+        }
+
+        .sorteado {
+            --scale: 5;
+            --opacity: 0;
+            --transY: -100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            font-size: 150%;
+            text-align: center;
+            background: #96C624;
+            padding: 1em;
+            z-index: 9999;
+            opacity: var(--opacity);
+            transform: translate(-50%, var(--transY)) scale(var(--scale));
+            transition: 2s cubic-bezier(1, 0.01, 0.74, 1.27);
+            transform-origin: 50% 50%;
+            font-size: 10vmin;
+            text-transform: capitalize;
+            color: #FFFFFF;
+            box-shadow: 0px 0px 20vh 30vh #000000;
+        }
+
+        .sorteado.view {
+            --scale: 1;
+            --opacity: 1;
+            --transY: -50%;
+        }
+
+        .sorteado.destroy {
+            animation: destroySorteado .3s forwards;
+        }
+
+        .bg {
+            overflow: hidden;
+            display: flex;
+            padding-right: 50%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #CA2027;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            color: #FFFFFF;
+            clip-path: polygon(0% 100%, 0% 0%, 70% 0%, 49% 100%);
+            font-size: 8vmin
+        }
+
+        .bg h1,
+        .bg h2 {
+            position: absolute;
+            left: 0;
+        }
+
+        .bg h1 {
+            font-size: 100%;
+            width: 60vw;
+            text-align: center;
+            padding: 1em;
+        }
+
+        .bg h2 {
+            display: block;
+            width: 60vw;
+            text-align: center;
+            text-transform: lowercase;
+            font-size: 70%;
+            bottom: 1em;
+        }
+
+        @keyframes anim {
+            0% {
+                transform: rotate(1deg);
+            }
+
+            100% {
+                transform: rotate(361deg);
+            }
+        }
+
+        .bg img {
+            position: absolute;
+            height: 200%;
+            filter: grayscale(1) brightness(0);
+            z-index: -1;
+            opacity: .15;
+            transform: rotate(1deg);
+            animation: anim 60s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg">
+        <img src="http://etic.ifc.edu.br/2019/assets/images/logo-etic-gray.png">
+        <h1>X Encontro de Tecnologia da Informação e Comunicação</h1>
+        <h2>obrigado por vir</h2>
+    </div>
+    <script>
+        let current = 0;
+        let list = [];
+        let timer = 0;
+        let luckOne = [];
+
+        const rnd = (min = 150, max = 250) => (Math.floor(Math.random() * (max + 1)) - min) * (Math.random() > .25 ? 1 : -1);
+
+        function init() {
+            add();
+            clearInterval(timer);
+            timer = setInterval(add, 1000 * 5);
+        }
+
+        async function loadList() {
+            let req = await fetch('../../person/every');
+            // let req = await fetch('../../checkin/auditorio/persons');
+            let nList = await req.json();
+            if (nList && nList.length)
+                list = nList;
+        }
+
+        async function add() {
+
+            if (current == 0)
+                await loadList();
+
+            if (!list.length)
+                return;
+
+            let el = document.createElement('div');
+            let person = list[current++] || list[current = 0];
+            el.classList.add('el');
+            el.classList.add('anim');
+            el.innerText = person.name + ' ' + person.lastname;
+            el.style.transform = `translate(${rnd()}vh, ${rnd()}vh)`;
+            document.body.append(el);
+            el.addEventListener("animationend", () => el.remove());
+        }
+
+        window.addEventListener('blur', () => clearInterval(timer));
+
+        window.addEventListener('focus', () => init());
+
+        window.addEventListener('keyup', ev => {
+            ev.preventDefault();
+
+            if (ev.shiftKey && ev.key == "Enter") {
+                document.querySelectorAll('.sorteado').forEach(el => el.classList.add('destroy'));
+                let rand;
+                if (luckOne.length === list.length) {
+                    alert('...');
+                    return;
+                }
+                do {
+                    rand = list[Math.floor(Math.random() * list.length)];
+                } while (luckOne.indexOf(rand) >= 0);
+                luckOne.push(rand);
+                let el = document.createElement('div');
+                el.classList.add('sorteado');
+                el.innerText = rand.name + ' ' + rand.lastname;
+                document.body.appendChild(el);
+                el.addEventListener("animationend", () => el.remove());
+                setTimeout(() => {
+                    el.classList.add('view');
+                }, 100)
+                return;
+            }
+
+            if (ev.key == "Escape") {
+                document.querySelectorAll('.sorteado').forEach(el => el.classList.add('destroy'));
+                return;
+            }
+        })
+
+        init();        
+    </script>
+</body>
+
+</html>

@@ -6,6 +6,13 @@ import { finder } from '../api/finder';
 const router = express.Router();
 const upload = multer();
 
+router.get('/auditorio/persons',
+    finder(
+        Checkin.getAuditorioPersons,
+        [],
+        []
+    ));
+
 router.get('/auditorio/current',
     finder(
         Checkin.getCurrentAuditorio,

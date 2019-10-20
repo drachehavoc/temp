@@ -252,17 +252,19 @@ export class Person {
             "birth_city=?": d.birth_city,
             "current_city=?": d.current_city,
             "current_school=?": d.current_school,
-            // "email=?": d.email,
+            "special=?": d.special
         };
 
         let personKeys = Object.keys(person);
         let personVals = Object.values(person);
         let pInfo = await conn.query(`UPDATE person SET ${personKeys.join(', ')} WHERE id=? LIMIT 1`, [...personVals, session.store.person]);
         let lInfo;
+
         if (data.password && data.password.trim() !== '') {
             validatePass(data.password);
-            lInfo = await Login.alter(session.store.login, d.email, data.password);
+            lInfo = await Login.alter(session.store.login, session.store.email, data.password);
         }
+        
         return true;
     }
 
@@ -273,7 +275,13 @@ export class Person {
             err: true,
             msg: 'você precisa logar-se para visualizer seus dados'
         };
-        let row = await conn.query(`SELECT name, lastname, document_id, email, birth, current_school FROM person WHERE id = ? LIMIT 1`, [session.store.person]);
+        let row = await conn.query(`SELECT name, lastname, document_id, email, birth, current_school, birth_city, current_city, special FROM person WHERE id = ? LIMIT 1`, [session.store.person]);
         return row[0] || null;
+    }
+
+    static async everyOne() {
+        let conn = await connection();
+        let row = await conn.query(`SELECT name, lastname FROM person`, []);
+        return row;
     }
 }

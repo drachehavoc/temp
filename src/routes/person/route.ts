@@ -32,4 +32,12 @@ router.put('/',
     )
 );
 
+router.get('/every',
+    finder(
+        Person.everyOne,
+        [],
+        []
+    )
+);
+
 export default router;
