@@ -244,7 +244,8 @@
                 person = domParticipants.children[0];
             }
 
-            person.scrollIntoViewIfNeeded();
+            person.scrollIntoView();
+            // person.scrollIntoViewIfNeeded();
             if (currentSelectedPerson)
                 currentSelectedPerson.classList.remove('selected');
             person.classList.add('selected');

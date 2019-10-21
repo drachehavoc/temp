@@ -301,7 +301,7 @@ document
 
     await domLogin();
 
-    endLoading()
+    endLoading();
 
     document
         .querySelectorAll('select.cities')
