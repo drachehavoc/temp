@@ -132,7 +132,7 @@
             display: block;
             width: 60vw;
             text-align: center;
-            text-transform: lowercase;
+            text-transform: none;
             font-size: 70%;
             bottom: 1em;
         }
@@ -163,7 +163,7 @@
     <div class="bg">
         <img src="http://etic.ifc.edu.br/2019/assets/images/logo-etic-gray.png">
         <h1>X Encontro de Tecnologia da Informação e Comunicação</h1>
-        <h2>obrigado por vir</h2>
+        <h2>Que bom que você veio</h2>
     </div>
     <script>
         let current = 0;
@@ -180,8 +180,8 @@
         }
 
         async function loadList() {
-            let req = await fetch('../../person/every');
-            // let req = await fetch('../../checkin/auditorio/persons');
+            // let req = await fetch('../../person/every');
+            let req = await fetch('../../checkin/auditorio/persons');
             let nList = await req.json();
             if (nList && nList.length)
                 list = nList;

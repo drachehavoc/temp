@@ -54,10 +54,11 @@ export class Activity {
                 slug=?
             LIMIT 
                 1
-            `, [
-            slug
-        ]
+            `, [slug]
         );
+
+        if (!res[0])
+            return false;
 
         let resParticipantes = await conn.query(`
             SELECT 
@@ -72,9 +73,7 @@ export class Activity {
                 activity_id=? 
             ORDER BY 
                 name
-            `, [
-            res[0].id
-        ]
+            `, [res[0].id]
         );
 
         return {

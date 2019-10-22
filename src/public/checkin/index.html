@@ -9,7 +9,7 @@
     <style>
         * {
             box-sizing: border-box;
-            font-family: sans-serif;
+            font-family: sans-serif !important;
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             -khtml-user-select: none;
@@ -25,6 +25,7 @@
             height: 100vh;
             background: #000000;
             flex-direction: column;
+            overflow: hidden;
         }
 
         body.loading .loading {
@@ -168,6 +169,115 @@
                 padding: 1.25em;
             }
         }
+
+        .outsider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9;
+            background: #CA2027EE;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: .3s;
+            opacity: 0;
+            transform: translateY(-10%);
+            visibility: hidden;
+        }
+
+        .outsider.open {
+            opacity: 1;
+            transform: translateY(0%);
+            visibility: visible
+        }
+
+        .outsider:before {
+            content: " ";
+            background-image: url(bad.svg);
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+            height: 10vh;
+            width: 10vh;
+            margin-top: 5vh
+        }
+
+        .outsider span {
+            display: block;
+            width: 80%;
+            font-size: 2vw;
+            padding: 1em;
+        }
+
+        .outsider form {
+            display: flex;
+            width: 80%;
+            /* background: green; */
+            flex-direction: column
+        }
+
+        .outsider input {
+            border: 1px solid black;
+            flex-grow: 1;
+            padding: 1em;
+            font-size: 1.5vw;
+            margin: .5em;
+        }
+
+        .outsider button {
+            padding: 1em;
+            font-size: 1.25vw;
+            width: 20%;
+            margin: .5em;
+            align-self: flex-end
+        }
+
+        .outsider-error span {
+            font-size: 4vw;
+            text-align: center;
+            line-height: 1.5em;
+        }
+
+        .outsider-error button {
+            align-self: center
+        }
+
+        @keyframes welcome {
+            10% {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+
+            80% {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, 10%);
+            }
+        }
+
+        .welcome {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            background: #96C624;
+            z-index: 9999;
+            opacity: 0;
+            transform: translate(-50%, 100%);
+            padding: 1em;
+            border-radius: 10px;
+            font-size: 4vw;
+            text-align: center;
+            text-transform: capitalize;
+            width: 80%;
+            animation: welcome 5s forwards;
+        }
     </style>
 </head>
 
@@ -175,7 +285,7 @@
     <div class="loading"></div>
 
     <form name="slug" class="form-slug">
-        <input type="text" name="slug" placeholder="código do evento" autofocus>
+        <input type="text" name="slug" placeholder="código do evento" autofocus maxlength="8">
     </form>
 
     <form name="doc" class="form-doc disabled">
@@ -190,21 +300,50 @@
         <!-- X X X -->
     </div>
 
+    <div class="outsider">
+        <span>
+            Parece que você não se inscreveu para esta atividade, mas não se preocupe, nos informe seu nome,
+            sobrenome e e-mail, caso ainda existam vagas remanacentes nós te encaixaremos ^^.
+        </span>
+        <form name="outsider">
+            <input placeholder="seu primeiro nome" name="name">
+            <input placeholder="seu sobrenome" name="lastname">
+            <input type="email" placeholder="informe-nos seu email" name="email">
+            <button>me deixe entrar!</button>
+        </form>
+    </div>
+
+    <div class="outsider outsider-error">
+        <span>
+            HEY!<br>
+            <strong>Verifique seus dados com atenção,</strong> seu e-mail e seu nome são importantes para nós!
+        </span>
+        <button>ok!</button>
+    </div>
+
     <script>
         let currentSelectedPerson = null;
         let buff = document.createElement('template');
         let domParticipants = document.querySelector('.participants');
+        let domOutsider = document.querySelector('.outsider');
         let activity;
         let slug;
 
-        // -------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
+
+        if (document.location.search == '?auditorio') {
+            document.forms.doc.doc.placeholder = "digite seu CPF";
+            document.forms.doc.doc.setAttribute("maxlength", 11);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
 
         function setActivityDom(data) {
             let domActivityTitle = document.querySelector('.activity .title');
             domActivityTitle.innerHTML = data.title;
         }
 
-        // -------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
 
         function setParticipantsDom(data) {
             data.forEach(person => {
@@ -215,6 +354,15 @@
 
                 if (person.checked == '1')
                     cls = 'ok';
+
+                if (document.location.search == '?auditorio') {
+                    buff.innerHTML += `
+                        <div class='person ${cls}' data-id='${person.id}' data-subs='${person.subs}' data-doc='${person.document_id}' data-name='${person.name} ${person.lastname}'>
+                            ${person.name} ${person.lastname}
+                        </div>
+                    `;
+                    return;
+                }
 
                 buff.innerHTML += `
                     <div class='person ${cls}' data-id='${person.id}' data-subs='${person.subs}' data-doc='${person.document_id}' data-name='${person.name} ${person.lastname}'>
@@ -228,7 +376,7 @@
             jumpPerson();
         }
 
-        // -------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
 
         function jumpPerson(dir) {
             let person;
@@ -240,7 +388,11 @@
                 person = currentSelectedPerson.previousElementSibling;
 
             if (!person) {
-                if (!domParticipants.children.length) return;
+                if (!domParticipants.children.length) {
+                    currentSelectedPerson = null;
+                    return;
+                }
+
                 person = domParticipants.children[0];
             }
 
@@ -252,9 +404,24 @@
             currentSelectedPerson = person;
         }
 
-        // -------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
 
-        async function check() {
+        function welcome(name) {
+            let el = document.createElement('div');
+            el.innerHTML = `Seja bem vindo <br><strong>${name}</strong>!`;
+            el.classList.add('welcome');
+            document.body.appendChild(el);
+            el.addEventListener('animationend', function () {
+                el.remove();
+            });
+            return;
+        }
+
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
+
+        async function check(clear = false) {
+            console.log('aaaaaaaaaa');
+            
             if (!currentSelectedPerson || !activity) {
                 alert('selecione alguém para definir a presença.');
                 return;
@@ -278,6 +445,11 @@
                 if (res === true) {
                     currentSelectedPerson.classList.add('ok');
                     buffCurrentSelectedPerson.classList.add('ok');
+                    if (clear) {
+                        welcome(currentSelectedPerson.innerText);
+                        document.forms.doc.doc.value = '';
+                        document.forms.doc.doc.dispatchEvent(new Event('keyup'));
+                    }
                 } else {
                     currentSelectedPerson.classList.add('error');
                     buffCurrentSelectedPerson.classList.add('error');
@@ -298,7 +470,7 @@
             buffCurrentSelectedPerson.classList.remove('local');
         }
 
-        // -------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
 
         async function loadList() {
             document.body.classList.add('loading');
@@ -318,23 +490,25 @@
             document.body.classList.remove('loading');
         }
 
-        // -------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
 
         document.forms.slug.addEventListener('submit', async ev => {
             ev.preventDefault();
             await loadList();
         });
 
-        // -------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
 
         document.forms.slug.slug.addEventListener('keyup', async ev => {
             if (document.forms.slug.slug.value.length >= 8) {
+                ev.preventDefault();
                 await loadList();
                 slug = document.forms.slug.slug.value;
+                return;
             }
         });
 
-        // -------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
 
         let search;
 
@@ -348,7 +522,25 @@
             }
         })
 
-        // -------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
+
+        document.forms.doc.doc.addEventListener('keyup', async ev => {
+            if (document.forms.doc.doc.value.length >= 11 && !isNaN(document.forms.doc.doc.value)) {
+                ev.preventDefault();
+                if (currentSelectedPerson) {
+                    check(true);
+                    return;
+                }
+
+                domOutsider.classList.add('open');
+                setTimeout(() => document.forms.outsider.name.focus(), 200);
+                return;
+
+            }
+        });
+
+
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
 
         let prevVal = '';
 
@@ -385,7 +577,7 @@
             }, 0);
         });
 
-        // -------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
 
         domParticipants.addEventListener('click', ev => {
             let cl = ev.target.closest('.person');
@@ -399,11 +591,11 @@
             currentSelectedPerson = cl;
             currentSelectedPerson.classList.add('selected');
 
-            if (ev.target.classList.contains('check')) 
+            if (ev.target.classList.contains('check'))
                 check();
         });
 
-        // -------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
 
         domParticipants.addEventListener('dblclick', ev => {
             ev.preventDefault();
@@ -414,23 +606,70 @@
             check();
         });
 
-        // -------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
 
         // domParticipants.addEventListener('click', ev => {
         //     console.log(ev.target.dataset.id);
         // });
 
-        // -------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
+
+        function outsiderError() {
+            let root = document.querySelector('.outsider-error');
+            let bt = root.querySelector('button');
+            root.classList.add('open');
+            setTimeout(() => bt.focus(), 200);
+            bt.addEventListener('click', evt => {
+                root.classList.remove('open');
+                domOutsider.querySelector('input').focus();
+            });
+
+        }
+
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
+
+        document.forms.outsider.addEventListener('submit', async ev => {
+            ev.preventDefault();
+            let body = new FormData(document.forms.outsider);
+            body.append('cpf', document.forms.doc.doc.value);
+            let req = await fetch('../../checkin/auditorio/left', { method: "POST", body });
+            let res = await req.json();
+
+            if (res === true) {
+                domOutsider.classList.remove('open');
+                document.forms.doc.doc = '';
+                document.forms.doc.dispatchEvent(new Event('keyup'));
+                welcome(document.forms.outsider.name.value + ' ' + document.forms.outsider.lastname.value);
+                return;
+            }
+
+            if (res && res.err)
+                outsiderError();
+
+            return;
+        });
+
+        // -------------------------------------------------------------------------------------------------------------------------------------------------
 
         window.addEventListener('keydown', ev => {
-            document.forms.doc.doc.focus();
+            if (!domOutsider.classList.contains('open'))
+                document.forms.doc.doc.focus();
+
+            if (ev.which == 27) {
+                ev.preventDefault();
+                domOutsider.classList.remove('open');
+                document.forms.doc.doc.focus();
+                document.forms.doc.doc.value = '';
+                return;
+            }
 
             if (!currentSelectedPerson)
                 return;
 
-            if (ev.which == 13) {
+            if (ev.which == 13 && document.location.search !== '?auditorio') {
                 ev.preventDefault();
                 check();
+                return;
             }
 
             if (ev.which == 40)
