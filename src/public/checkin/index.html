@@ -274,9 +274,16 @@
             border-radius: 10px;
             font-size: 4vw;
             text-align: center;
-            text-transform: capitalize;
             width: 80%;
             animation: welcome 5s forwards;
+        }
+
+        .welcome strong {
+            text-transform: capitalize;
+        }
+
+        .welcome.err {
+            background: #CA2027EE
         }
     </style>
 </head>
@@ -406,10 +413,16 @@
 
         // -------------------------------------------------------------------------------------------------------------------------------------------------
 
-        function welcome(name) {
+        function welcome(name, aguarde = false) {
             let el = document.createElement('div');
-            el.innerHTML = `Seja bem vindo <br><strong>${name}</strong>!`;
             el.classList.add('welcome');
+            if (aguarde) {
+                el.classList.add('err');
+                el.innerHTML = `Aguarde a porta da direita abrir <br><strong>${name}</strong>!`;
+            } else {
+                el.classList.remove('err');
+                el.innerHTML = `Seja bem vindo <br><strong>${name}</strong>!`;
+            }
             document.body.appendChild(el);
             el.addEventListener('animationend', function () {
                 el.remove();
@@ -420,8 +433,6 @@
         // -------------------------------------------------------------------------------------------------------------------------------------------------
 
         async function check(clear = false) {
-            console.log('aaaaaaaaaa');
-            
             if (!currentSelectedPerson || !activity) {
                 alert('selecione alguém para definir a presença.');
                 return;
@@ -533,7 +544,10 @@
                 }
 
                 domOutsider.classList.add('open');
-                setTimeout(() => document.forms.outsider.name.focus(), 200);
+                setTimeout(() => {
+                    document.forms.outsider.reset();
+                    document.forms.outsider.name.focus();
+                }, 200);
                 return;
 
             }
@@ -639,7 +653,9 @@
                 domOutsider.classList.remove('open');
                 document.forms.doc.doc = '';
                 document.forms.doc.dispatchEvent(new Event('keyup'));
-                welcome(document.forms.outsider.name.value + ' ' + document.forms.outsider.lastname.value);
+                welcome(document.forms.outsider.name.value + ' ' + document.forms.outsider.lastname.value, true);
+                document.forms.doc.doc.value = '';
+                document.forms.doc.doc.dispatchEvent(new Event('keyup'))
                 return;
             }
 
