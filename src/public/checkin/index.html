@@ -646,6 +646,7 @@
             ev.preventDefault();
             let body = new FormData(document.forms.outsider);
             body.append('cpf', document.forms.doc.doc.value);
+            body.append('slug', document.forms.slug.slug.value);
             let req = await fetch('../../checkin/auditorio/left', { method: "POST", body });
             let res = await req.json();
 

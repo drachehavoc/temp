@@ -35,6 +35,31 @@ export class Activity {
         return res;
     }
 
+    
+    static async getActBySlug(slug: string): Promise<any> {
+        let conn = await connection();
+        let res = await conn.query(`
+            SELECT 
+                activity.id, 
+                title,
+                subtitle,
+                description,
+                seats,
+                start_at,
+                duration, 
+                activity_type_id,
+                location
+            FROM 
+                activity 
+            WHERE 
+                slug=?
+            LIMIT 
+                1
+            `, [slug]
+        );
+        return res[0] || null;
+    }
+
     static async getBySlug(slug: string) {
         let conn = await connection();
         let res = await conn.query(`

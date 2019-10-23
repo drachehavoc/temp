@@ -7,8 +7,7 @@ router.get('/', (req, res) => Place
     .getBrazil()
     .then(cities => res.send(cities))
     .catch((err: any) => {
-        console.error(err);
-        
+        console.error(err);  
         res.send(err);
     })
 );

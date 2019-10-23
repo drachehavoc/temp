@@ -41,7 +41,7 @@ router.post('/auditorio/left',
     finder(
         Checkin.left,
         [],
-        ["cpf", "name", "lastname", "email"]
+        ["cpf", "name", "lastname", "email", "slug"]
     ));
 
 export default router;

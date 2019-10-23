@@ -1,6 +1,7 @@
 import { connection } from "./connection";
 import { Login } from "./Login";
 import { testCPF, validateEmail } from "./Person";
+import { Activity } from "./Activity";
 
 export class Checkin {
     static auditorio: any = null;
@@ -99,7 +100,7 @@ export class Checkin {
         };
     }
 
-    static async left(cpf: string, name: string, lastname: string, email: string) {
+    static async left(cpf: string, name: string, lastname: string, email: string, slug: string) {
         cpf = (cpf || '').replace(/[\.-]/g, '')
         name = name || '';
         lastname = lastname || '';
@@ -120,7 +121,6 @@ export class Checkin {
             msg: 'Não deixe o campo sobrenome em branco.'
         }
 
-
         email = email.trim();
 
         if (!validateEmail(email)) throw {
@@ -130,13 +130,22 @@ export class Checkin {
 
         let conn = await connection();
 
-        let query = await conn.query('SELECT id FROM outsider WHERE activity_id=? AND document_id=? LIMIT 1', [Checkin.auditorio.id, cpf,])
+        let actId = await Activity.getActBySlug(slug);
+
+        if (!actId) throw {
+            err: true,
+            msg: 'Id de atividade não encontrado.'
+        }
+
+        actId = actId.id;
+
+        let query = await conn.query('SELECT id FROM outsider WHERE activity_id=? AND document_id=? LIMIT 1', [actId, cpf])
 
         if (query[0])
             return true;
 
         query = await conn.query('INSERT INTO outsider(activity_id, document_id, name, lastname, email) VALUES(?, ?, ?, ?, ?)', [
-            Checkin.auditorio.id,
+            actId,
             cpf,
             name,
             lastname,
