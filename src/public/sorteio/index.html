@@ -48,14 +48,14 @@
             bottom: 0;
             right: 0;
             opacity: 0;
-            height: 70vh;
-            width: 40vw;
+            height: 100vh;
+            width: 65vw;
             display: flex;
             justify-content: center;
             align-items: center;
             text-align: center;
 
-            font-size: 3vmax;
+            font-size: 4vmax;
             text-transform: capitalize;
             color: #FFFFFF;
         }
@@ -112,7 +112,9 @@
             right: 0;
             color: #FFFFFF;
             clip-path: polygon(0% 100%, 0% 0%, 70% 0%, 49% 100%);
-            font-size: 8vmin
+            font-size: 8vmin;
+            /* pog telão */
+            transform: scaleX(.6) translateX(-34%) 
         }
 
         .bg h1,
@@ -123,9 +125,11 @@
 
         .bg h1 {
             font-size: 100%;
-            width: 60vw;
+            width: 70vw;
             text-align: center;
             padding: 1em;
+            /* pog telão */
+            transform: translate(-7%, -35%)
         }
 
         .bg h2 {
@@ -135,6 +139,7 @@
             text-transform: none;
             font-size: 70%;
             bottom: 1em;
+            transform: translate(-7%, -213%)
         }
 
         @keyframes anim {
