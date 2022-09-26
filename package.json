@@ -25,7 +25,7 @@
     "@types/nodemailer": "^6.2.1",
     "@types/uuid": "^3.4.5",
     "@types/ws": "^6.0.3",
-    "pm2": "^3.5.1",
+    "pm2": "^5.2.0",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3"
   }
